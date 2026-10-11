@@ -1,0 +1,13 @@
+# Điểm cuối DoH phổ biến – trả NXDOMAIN
+dns.google
+cloudflare-dns.com
+mozilla.cloudflare-dns.com
+dns.quad9.net
+doh.opendns.com
+dns.nextdns.io
+dns.adguard.com
+doh.cleanbrowsing.org
+doh.dns.sb
+doh.libredns.gr
+dns.twnic.tw
+doh.pub

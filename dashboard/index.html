@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OpenGuard Kids – Phụ huynh</title>
+<style>
+:root{--bg:#fff;--fg:#1c1c1e;--mut:#6b7280;--bd:#d8dce2;--ac:#2b8a3e}
+@media(prefers-color-scheme:dark){:root{--bg:#16181d;--fg:#eceff4;--mut:#9aa3b2;--bd:#343a46}}
+*{box-sizing:border-box}body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--fg);max-width:760px;margin:0 auto;padding:.75rem}
+h1{font-size:1.3rem;margin:.2rem 0}h2{font-size:1.05rem;margin:1rem 0 .4rem}
+input,select,button,textarea{font:inherit;padding:.45rem .6rem;margin:.15rem 0;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--fg)}
+button{cursor:pointer}button.p{background:var(--ac);color:#fff;border-color:var(--ac)}button.d{color:#c92a2a;border-color:#c92a2a}
+.card{border:1px solid var(--bd);border-radius:10px;padding:.7rem;margin:.6rem 0}.mut{color:var(--mut);font-size:.9rem}
+nav{display:flex;gap:.3rem;flex-wrap:wrap;margin:.5rem 0}nav button.on{background:var(--ac);color:#fff}
+#msg{color:#c92a2a;min-height:1.2em}.ok{color:var(--ac)}
+.grid{overflow-x:auto}.row{display:flex;align-items:center;white-space:nowrap}.row b{width:2.2rem;font-size:.8rem}
+.c{width:12px;height:16px;border:1px solid var(--bd);margin:0;cursor:pointer;flex:none}.c.on{background:var(--ac)}.c.h{margin-left:3px}
+.bar{height:14px;background:var(--ac);border-radius:3px;min-width:1px}.br{display:flex;gap:.5rem;align-items:center;font-size:.85rem;margin:2px 0}.br span.l{width:5.5rem;flex:none}
+table{border-collapse:collapse;width:100%;font-size:.85rem}td,th{border-bottom:1px solid var(--bd);padding:.3rem;text-align:left;vertical-align:top}
+</style></head><body>
+<h1>OpenGuard Kids</h1>
+<div class="mut"><em>Công cụ đồng hành, không phải phần mềm theo dõi lén. Trẻ thấy cùng báo cáo và nhật ký luật mà phụ huynh thấy.</em></div>
+<div id="msg"></div>
+
+<section id="auth">
+  <input id="email" type="email" placeholder="Email" autocomplete="username"><br>
+  <input id="pw" type="password" placeholder="Mật khẩu (≥10 ký tự)" autocomplete="current-password"><br>
+  <button class="p" onclick="login()">Đăng nhập</button> <button onclick="reg()">Đăng ký</button>
+</section>
+
+<section id="main" hidden>
+  <div style="display:flex;justify-content:space-between;gap:.5rem;flex-wrap:wrap">
+    <select id="child" onchange="sel()"></select>
+    <span><button onclick="addChild()">+ Thêm con</button> <button onclick="logout()">Đăng xuất</button></span>
+  </div>
+  <nav id="tabs"></nav>
+  <div id="view"></div>
+</section>
+
+<script>
+const $=id=>document.getElementById(id);
+const csrf=()=>(document.cookie.match(/(?:^|; )ogk_csrf=([^;]*)/)||[])[1]||'';
+function h(tag,attrs={},...kids){const e=document.createElement(tag);
+  for(const[k,v]of Object.entries(attrs)){if(k.startsWith('on'))e[k]=v;else if(k==='class')e.className=v;else e.setAttribute(k,v)}
+  for(const c of kids.flat())e.append(c instanceof Node?c:document.createTextNode(c??''));return e}
+function say(t,ok){$('msg').className=ok?'ok':'';$('msg').textContent=t||''}
+async function api(path,method='GET',body){
+  const opt={method,credentials:'same-origin',headers:{}};
+  if(method!=='GET'){opt.headers['X-CSRF-Token']=csrf()}
+  if(body!==undefined){opt.headers['Content-Type']='application/json';opt.body=JSON.stringify(body)}
+  const r=await fetch(path,opt);const j=await r.json().catch(()=>({}));
+  if(!r.ok){const d=j.detail;say(typeof d==='string'?d:'Lỗi '+r.status);throw new Error(d)}
+  say('');return j}
+const creds=()=>({email:$('email').value,password:$('pw').value});
+async function reg(){await api('/auth/register','POST',creds());say('Đã đăng ký, hãy đăng nhập',true)}
+async function login(){await api('/auth/login','POST',creds());boot()}
+async function logout(){await api('/auth/logout','POST');$('main').hidden=true;$('auth').hidden=false}
+let children=[],cur=null,tab='over',pol=null;
+async function boot(){children=await api('/children');$('auth').hidden=true;$('main').hidden=false;
+  $('child').replaceChildren(...children.map(c=>h('option',{value:c.id},`${c.name} (${c.age} tuổi)`)));
+  cur=children.length?children[0].id:null;$('child').value=cur;drawTabs();show()}
+function sel(){cur=+$('child').value;show()}
+async function addChild(){const n=prompt('Tên con?');if(!n)return;const a=+prompt('Tuổi? (3–17)','9');
+  await api('/children','POST',{name:n,age:a});boot()}
+const TABS=[['over','Thiết bị & lệnh'],['pol','Chính sách'],['req','Yêu cầu của con'],['rep','Báo cáo'],['aud','Nhật ký']];
+function drawTabs(){$('tabs').replaceChildren(...TABS.map(([k,t])=>h('button',{class:k===tab?'on':'',onclick:()=>{tab=k;drawTabs();show()}},t)))}
+async function show(){const v=$('view');v.replaceChildren();if(!cur){v.append(h('p',{},'Hãy thêm con để bắt đầu.'));return}
+  ({over,pol:polTab,req,rep,aud})[tab](v)}
+
+async function over(v){
+  const[ds]=[await api('/devices')];
+  v.append(h('div',{class:'card'},h('b',{},'Ghép đôi máy mới'),h('p',{class:'mut'},'Tạo mã (hiệu lực 10 phút). Nhập mã trên máy của con – đây là bước ghi nhận sự đồng ý của cha mẹ.'),
+    h('button',{class:'p',onclick:async e=>{const j=await api(`/children/${cur}/enroll-code`,'POST');e.target.nextSibling.textContent=' Mã: '+j.code}},'Tạo mã ghép đôi'),h('span',{})));
+  v.append(h('div',{class:'card'},h('b',{},'Lệnh khẩn (đến máy trong vài giây)'),h('br'),
+    h('button',{class:'d',onclick:()=>cmd('lock')},'Khóa ngay'),' ',h('button',{onclick:()=>cmd('unlock')},'Mở khóa'),' ',
+    h('button',{onclick:()=>cmd('add_minutes',15)},'+15 phút')));
+  v.append(h('h2',{},'Thiết bị'),...ds.filter(d=>d.child_id===cur).map(d=>h('div',{class:'card'},
+    h('b',{},d.name),h('div',{class:'mut'},`Lần cuối: ${d.last_seen||'chưa có'} · chính sách v${d.policy_version_seen} · đã dùng hôm nay ${Math.round(d.quota_used_sec/60)} phút`+(Math.abs(d.clock_skew)>120?' · ⚠ đồng hồ máy bị lệch':'')),
+    h('button',{class:'d',onclick:async()=>{if(confirm('Thu hồi thiết bị này?')){await api('/devices/'+d.id,'DELETE');show()}}},'Thu hồi'))));
+  v.append(h('div',{class:'card'},h('b',{},'Dữ liệu của con'),h('br'),
+    h('button',{class:'d',onclick:async()=>{if(confirm('Xóa TOÀN BỘ dữ liệu của con trên máy chủ và trong bộ đệm của agent?')){const j=await api(`/children/${cur}/data`,'DELETE');say('Đã xóa '+j.deleted_events+' sự kiện',true)}}},'Xóa toàn bộ dữ liệu của con tôi')))}
+async function cmd(kind,minutes){const j=await api(`/children/${cur}/commands`,'POST',{kind,minutes:minutes||15});say(`Đã gửi tới ${j.sent} thiết bị`,true)}
+
+async function polTab(v){
+  const r=await api(`/children/${cur}/policy`);pol=r.policy;
+  const num=(k,l)=>h('label',{},l+' ',h('input',{type:'number',min:0,max:1440,value:pol[k],style:'width:5rem',onchange:e=>pol[k]=+e.target.value}));
+  v.append(h('div',{class:'card'},h('b',{},`Chính sách v${r.version}`),h('br'),num('quota_min_weekday','Hạn mức ngày thường (phút)'),h('br'),num('quota_min_weekend','Hạn mức cuối tuần (phút)')));
+  const g=h('div',{class:'grid'}),days=['T2','T3','T4','T5','T6','T7','CN'];
+  pol.schedule=pol.schedule.map(s=>s.split(''));
+  days.forEach((d,i)=>{const row=h('div',{class:'row'},h('b',{},d));
+    for(let s=0;s<48;s++){const c=h('div',{class:'c'+(pol.schedule[i][s]==='1'?' on':'')+(s%2===0&&s>0?' h':''),title:`${String(s>>1).padStart(2,'0')}:${s%2?'30':'00'}`,
+      onclick:()=>{pol.schedule[i][s]=pol.schedule[i][s]==='1'?'0':'1';c.classList.toggle('on')}});row.append(c)}g.append(row)});
+  v.append(h('div',{class:'card'},h('b',{},'Lịch tuần (ô xanh = được dùng, mỗi ô 30 phút, 0h → 24h)'),g));
+  const cats=[['social','Mạng xã hội'],['games','Trò chơi'],['entertainment','Giải trí'],['inappropriate','Không phù hợp lứa tuổi']];
+  v.append(h('div',{class:'card'},h('b',{},'Chặn theo nhóm website'),h('br'),...cats.map(([k,l])=>h('label',{},h('input',{type:'checkbox',checked:pol.blocked_categories.includes(k)?'':null,
+    onchange:e=>{pol.blocked_categories=pol.blocked_categories.filter(x=>x!==k);if(e.target.checked)pol.blocked_categories.push(k)}}),' '+l+'  ')),h('br'),
+    h('label',{},h('input',{type:'checkbox',onchange:e=>pol.safesearch=e.target.checked,checked:pol.safesearch?'':null}),' Bật SafeSearch'),h('br'),
+    h('label',{},h('input',{type:'checkbox',onchange:e=>pol.block_uncategorized=e.target.checked,checked:pol.block_uncategorized?'':null}),' Chặn trang chưa phân loại')));
+  const dr=h('textarea',{rows:4,style:'width:100%',placeholder:'mỗi dòng: block example.com  hoặc  allow example.org'},pol.domain_rules.map(x=>`${x.action} ${x.domain}`).join('\n'));
+  const ar=h('textarea',{rows:4,style:'width:100%',placeholder:'mỗi dòng: block tên.exe [sha256]  hoặc  allow tên.exe [sha256]'},pol.app_rules.map(x=>`${x.action} ${x.name} ${x.sha256}`.trim()).join('\n'));
+  const mode=h('select',{onchange:e=>pol.app_mode=e.target.value},h('option',{value:'blocklist'},'Chỉ chặn ứng dụng trong danh sách'),h('option',{value:'allowlist'},'Chỉ cho phép ứng dụng trong danh sách'));mode.value=pol.app_mode;
+  v.append(h('div',{class:'card'},h('b',{},'Quy tắc tên miền (tên miền con được áp dụng theo)'),dr,h('b',{},'Quy tắc ứng dụng (băm SHA-256 giúp nhận ra tệp bị đổi tên)'),mode,ar));
+  v.append(h('button',{class:'p',onclick:async()=>{
+    const p=JSON.parse(JSON.stringify(pol));p.schedule=pol.schedule.map(s=>s.join(''));
+    const line=t=>t.value.split('\n').map(x=>x.trim()).filter(Boolean).map(x=>x.split(/\s+/));
+    p.domain_rules=line(dr).map(([a,d])=>({action:a,domain:d}));
+    p.app_rules=line(ar).map(([a,n,s])=>({action:a,name:n,sha256:s||''}));
+    const j=await api(`/children/${cur}/policy`,'PUT',p);say('Đã lưu – chính sách v'+j.version+' (áp dụng trên máy con trong vài giây)',true)}},'Lưu chính sách'))}
+
+async function req(v){const rs=await api('/requests?status=all');
+  v.append(h('h2',{},'Yêu cầu của con'),...(rs.length?rs:[{empty:1}]).map(r=>r.empty?h('p',{class:'mut'},'Chưa có yêu cầu.'):h('div',{class:'card'},
+    h('b',{},`${r.child}: ${r.kind==='more_time'?`xin thêm ${r.minutes} phút`:'báo chặn nhầm '+r.subject}`),h('div',{class:'mut'},`${r.created_at} · ${r.status}${r.note?' · "'+r.note+'"':''}${r.reply?' · trả lời: '+r.reply:''}`),
+    r.status==='pending'?h('span',{},h('button',{class:'p',onclick:()=>decide(r,true)},'Đồng ý'),' ',h('button',{onclick:()=>decide(r,false)},'Từ chối')):'')))}
+async function decide(r,ok){const reply=prompt('Lời nhắn cho con (không bắt buộc)')||'';await api(`/requests/${r.id}/decide`,'POST',{approve:ok,minutes:r.minutes||15,reply});show()}
+
+async function rep(v){
+  const sel=h('select',{onchange:()=>show()},h('option',{value:7},'7 ngày'),h('option',{value:30},'30 ngày'));sel.value=window._d||7;sel.onchange=()=>{window._d=sel.value;show()};
+  const d=+sel.value,r=await api(`/reports/${cur}?days=${d}`);
+  const bars=(rows,key,unit)=>{const mx=Math.max(1,...rows.map(x=>x[key]));return rows.map(x=>h('div',{class:'br'},h('span',{class:'l'},x.date||x.name),h('div',{class:'bar',style:`width:${Math.round(x[key]/mx*60)}%`}),h('span',{},x[key]+unit)))};
+  v.append(h('div',{},sel,' ',h('a',{href:`/reports/${cur}/export.csv?days=${d}`},'Xuất CSV')),
+    h('h2',{},'Thời lượng theo ngày'),...bars(r.daily,'minutes',' p'),h('h2',{},'Top 10 ứng dụng'),...bars(r.top_apps,'minutes',' p'),
+    h('h2',{},'Top 10 tên miền'),...bars(r.top_domains,'count',' lần'),h('h2',{},'Số lần bị chặn: '+r.blocked))}
+
+async function aud(v){const rs=await api('/audit?child_id='+cur);
+  v.append(h('h2',{},'Nhật ký thay đổi (con cũng xem được)'),h('table',{},h('tr',{},h('th',{},'Lúc'),h('th',{},'Ai'),h('th',{},'IP'),h('th',{},'Việc'),h('th',{},'Thay đổi')),
+    ...rs.map(a=>{const ch=a.new&&a.old&&typeof a.new==='object'?Object.keys(a.new).filter(k=>JSON.stringify(a.old[k])!==JSON.stringify(a.new[k])).map(k=>`${k}: ${JSON.stringify(a.old[k])} → ${JSON.stringify(a.new[k])}`).join('; '):'';
+      return h('tr',{},h('td',{},a.ts),h('td',{},a.who||'—'),h('td',{},a.ip),h('td',{},a.action),h('td',{},ch))})))}
+
+api('/children').then(boot).catch(()=>say(''));
+</script></body></html>

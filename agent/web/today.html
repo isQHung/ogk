@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hôm nay em đã dùng gì?</title>
+<style>
+:root{--bg:#fffdf5;--fg:#222;--ac:#2b8a3e;--bd:#e3dfc8}
+@media(prefers-color-scheme:dark){:root{--bg:#1b1d22;--fg:#eee;--bd:#3a3f4a}}
+body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--fg);max-width:640px;margin:0 auto;padding:1rem;font-size:1.1rem}
+h1{font-size:1.6rem}h2{font-size:1.15rem;margin-top:1.4rem}.card{border:2px solid var(--bd);border-radius:14px;padding:.8rem;margin:.6rem 0}
+.big{font-size:2.2rem;font-weight:700;color:var(--ac)}.bar{height:16px;background:var(--ac);border-radius:8px;min-width:4px}
+.row{display:flex;align-items:center;gap:.6rem;margin:.3rem 0}.l{width:8rem;overflow:hidden;text-overflow:ellipsis}small,.mut{color:#777}
+</style></head><body>
+<h1>🌟 Hôm nay em đã dùng gì?</h1>
+<p class="mut">Đây là đúng những gì ba mẹ cũng nhìn thấy. Máy chỉ ghi <b>tên ứng dụng, tên trang web và thời gian</b> – không ghi tin nhắn, không ghi phím gõ, không chụp màn hình.</p>
+<div id="err" class="mut"></div>
+<div class="card"><div>Hôm nay em đã dùng máy</div><div class="big" id="min">…</div></div>
+<h2>📱 Ứng dụng em dùng nhiều nhất <small>(số phút)</small></h2><div id="apps"></div>
+<h2>🌐 Trang web em hay vào</h2><div id="doms"></div>
+<div class="card">🚧 Có <b id="blk">0</b> lần máy đã chặn một thứ gì đó hôm nay. Nếu em nghĩ bị chặn nhầm, bấm biểu tượng OpenGuard Kids ở góc màn hình rồi chọn “Con nghĩ trang này bị chặn nhầm”.</div>
+<h2>💬 Những yêu cầu của em</h2><div id="help"></div>
+<h2>📜 Ai đã đổi luật, lúc nào?</h2><div id="aud"></div>
+<script>
+const $=id=>document.getElementById(id);
+function row(label,val,max){const d=document.createElement('div');d.className='row';
+  const l=document.createElement('span');l.className='l';l.textContent=label;const b=document.createElement('div');b.className='bar';b.style.width=Math.max(4,Math.round(val/max*55))+'%';
+  const v=document.createElement('small');v.textContent=val;d.append(l,b,v);return d}
+function line(t){const d=document.createElement('div');d.className='card';d.textContent=t;return d}
+async function get(p){const r=await fetch(p);if(!r.ok)throw new Error('offline');return r.json()}
+const ST={pending:'đang chờ ba mẹ',approved:'ba mẹ đồng ý ✅',denied:'ba mẹ chưa đồng ý'};
+(async()=>{
+ try{const t=await get('/api/today');$('min').textContent=Math.round(t.minutes_today)+' phút';$('blk').textContent=t.blocked;
+  const ma=Math.max(1,...t.top_apps.map(x=>x.minutes));$('apps').replaceChildren(...(t.top_apps.length?t.top_apps.map(x=>row(x.name,x.minutes,ma)):[line('Chưa có gì.')]));
+  const md=Math.max(1,...t.top_domains.map(x=>x.count));$('doms').replaceChildren(...(t.top_domains.length?t.top_domains.map(x=>row(x.name,x.count,md)):[line('Chưa có gì.')]));
+ }catch(e){$('err').textContent='Chưa kết nối được với máy chủ của ba mẹ, nên chưa có số liệu mới.'}
+ try{const h=await get('/api/help');$('help').replaceChildren(...(h.length?h.map(x=>line(`${x.kind==='more_time'?'Xin thêm '+x.minutes+' phút':'Báo chặn nhầm '+x.subject} → ${ST[x.status]}${x.reply?': “'+x.reply+'”':''}`)):[line('Em chưa gửi yêu cầu nào.')]))}catch(e){}
+ try{const a=await get('/api/audit');$('aud').replaceChildren(...(a.length?a.map(x=>line(`${x.ts} – ${x.who||'hệ thống'}: ${x.action}${x.changed.length?' ('+x.changed.join(', ')+')':''}`)):[line('Chưa có thay đổi.')]))}catch(e){}
+})();
+</script></body></html>

@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+websockets
+sqlalchemy>=2.0
+argon2-cffi
+cryptography
+httpx
+pytest

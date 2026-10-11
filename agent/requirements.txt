@@ -1,0 +1,8 @@
+httpx
+websockets
+dnslib
+psutil
+cryptography
+pystray
+pillow
+pywin32; sys_platform == "win32"
