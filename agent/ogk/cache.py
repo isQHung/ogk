@@ -1,5 +1,6 @@
 """Kho dữ liệu cục bộ: chính sách gần nhất, hàng đợi sự kiện, bộ đếm sử dụng."""
 import json
+from pathlib import Path
 import sqlite3
 import threading
 import uuid
@@ -7,7 +8,11 @@ import uuid
 
 class Cache:
     def __init__(self, path):
-        self.db = sqlite3.connect(str(path), check_same_thread=False, isolation_level=None)
+        db_path = Path(path)
+        db_path.parent.mkdir(parents=True, exist_ok=True)
+
+        self.db = sqlite3.connect(db_path.as_posix(), check_same_thread=False, isolation_level=None)
+        # self.db = sqlite3.connect(str(path), check_same_thread=False, isolation_level=None)
         self.lock = threading.RLock()
         with self.lock:
             self.db.execute("PRAGMA journal_mode=WAL")
