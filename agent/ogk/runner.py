@@ -170,6 +170,7 @@ class Runner:
             return False
         self.cache.set("policy_signed", {"payload": payload, "sig": sig})
         self.policy, self.policy_version = data["policy"], data["version"]
+        self.adapter.flush_dns() # flush dns after update new policy (clear window dns cache )
         self.notify("policy", "Luật đã được cập nhật", f"Phiên bản {self.policy_version}.", self.policy.get("set_by", ""))
         return True
 

@@ -60,6 +60,10 @@ def restore_system_dns():
         _ps("Get-NetAdapter | Set-DnsClientServerAddress -ResetServerAddresses")
 
 
+def flush_dns():
+    if IS_WIN:
+        subprocess.run(["ipconfig", "/flushdns"], capture_output=True)
+
 def _complement(ip: str):
     n = int(ipaddress.IPv4Address(ip))
     lo = f"0.0.0.0-{ipaddress.IPv4Address(n - 1)}" if n > 0 else None
