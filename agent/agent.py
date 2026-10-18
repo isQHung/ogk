@@ -32,6 +32,9 @@ def main():
     r.add_argument("--system-dns", action="store_true", help="đổi DNS hệ thống về 127.0.0.1 + chặn DNS ngoài (Windows, Admin)")
     u = sub.add_parser("uninstall")
     u.add_argument("--email", required=True)
+    d = sub.add_parser("dnscheck", help="chẩn đoán: proxy có chặn không và hệ điều hành có đang hỏi proxy không")
+    d.add_argument("domain")
+    d.add_argument("--port", type=int, default=53)
     sub.add_parser("tray")
     a = ap.parse_args()
 
@@ -57,6 +60,28 @@ def main():
         c = ServerClient(Cache(config.home() / "agent.db"))
         c.uninstall(a.email, getpass.getpass("Mật khẩu phụ huynh: "))
         print("Đã thu hồi thiết bị (có ghi nhật ký). Hãy gỡ dịch vụ: python service.py remove")
+    elif a.cmd == "dnscheck":
+        import socket
+        from dnslib import DNSRecord
+        try:
+            rec = DNSRecord.parse(DNSRecord.question(a.domain, "A").send("127.0.0.1", a.port, timeout=3))
+            proxy = str(rec.rr[0].rdata) if rec.rr else ("NXDOMAIN" if rec.header.rcode == 3 else "(rỗng)")
+        except OSError:
+            raise SystemExit(f"Proxy KHÔNG trả lời ở 127.0.0.1:{a.port} → agent chưa chạy hoặc sai cổng (--dns-port).")
+        try:
+            system = socket.gethostbyname(a.domain)
+        except OSError:
+            system = "NXDOMAIN"
+        blocked = proxy in ("127.0.0.1", "NXDOMAIN")
+        print(f"Hỏi trực tiếp proxy : {proxy}  ({'bị chặn' if blocked else 'cho phép'})")
+        print(f"Hệ điều hành phân giải: {system}")
+        if blocked and system != proxy:
+            print("→ Proxy CÓ chặn nhưng hệ điều hành KHÔNG hỏi proxy. Đặt DNS card mạng về 127.0.0.1 (cổng 53), "
+                  "tắt “Secure DNS/DoH” của trình duyệt, tắt DNS IPv6 của card mạng, rồi chạy: ipconfig /flushdns")
+        elif blocked:
+            print("→ Luật chặn đang hoạt động trên đường đi thật của máy này.")
+        else:
+            print("→ Proxy cho phép tên miền này: kiểm tra luật tên miền (đúng dạng example.com?), nhóm bị chặn và phiên bản chính sách agent đã nhận.")
     elif a.cmd == "tray":
         from ogk.tray import main as tray_main
         tray_main()
