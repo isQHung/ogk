@@ -410,6 +410,9 @@ async def decide(req_id: int, body: DecideIn, request: Request,
     r.status, r.reply, r.decided_at = ("approved" if body.approve else "denied"), body.reply, now()
     child = db.get(m.Child, r.child_id)
     pushes = []
+    help_update_devices = list(db.scalars(select(m.Device.id).where(
+        m.Device.child_id == child.id, m.Device.revoked == False  # noqa: E712
+    )))
     if body.approve and r.kind == "more_time":
         minutes = body.minutes or r.minutes or 15
         for d in db.scalars(select(m.Device).where(m.Device.child_id == child.id, m.Device.revoked == False)):  # noqa: E712
@@ -424,6 +427,8 @@ async def decide(req_id: int, body: DecideIn, request: Request,
     audit(db, request, p.id, child.id, "request_decided", {"id": r.id, "kind": r.kind},
           {"status": r.status, "reply": r.reply})
     db.commit()
+    for did in help_update_devices:
+        await hub.push(did, {"type": "help_decided", "id": r.id, "status": r.status})
     for did, cmd in pushes:
         await hub.push(did, {"type": "command", "id": cmd.id, "kind": cmd.kind, "minutes": cmd.minutes})
     if body.approve and r.kind == "wrong_block":
@@ -620,8 +625,14 @@ def transparency_audit(d: m.Device = Depends(device_required), db: Session = Dep
     out = []
     for a, em in db.execute(q):
         old, new = json.loads(a.old), json.loads(a.new)
-        changed = [k for k in (new or {}) if isinstance(old, dict) and isinstance(new, dict) and old.get(k) != new[k]]
-        out.append({"ts": a.ts, "who": em, "action": a.action, "changed": changed})
+        old = old if isinstance(old, dict) else {}
+        new = new if isinstance(new, dict) else {}
+        changed = [k for k in dict.fromkeys([*old, *new]) if old.get(k) != new.get(k)]
+        details = {key: new[key] for key in ("status", "reply", "minutes", "device", "events", "consent")
+                   if key in new}
+        if "kind" in old:
+            details["kind"] = old["kind"]
+        out.append({"ts": a.ts, "who": em, "action": a.action, "changed": changed, "details": details})
     return out
 
 

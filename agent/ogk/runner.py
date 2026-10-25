@@ -254,6 +254,7 @@ class Runner:
                 kw["ssl"] = ssl.create_default_context(cafile=conn["ca"])
             try:
                 async with _ws_connect(url, {"Authorization": f"Bearer {conn['token']}"}, **kw) as ws:
+                    self.api.broadcast({"type": "refresh_help"})
                     while not self.stop_evt.is_set():
                         try:
                             raw = await asyncio.wait_for(ws.recv(), 1.0)
@@ -265,6 +266,8 @@ class Runner:
                             await ws.send(json.dumps({"ack": [msg["id"]]}))
                         elif msg.get("type") == "policy_changed":
                             self.sync_now.set()
+                        elif msg.get("type") == "help_decided":
+                            self.api.broadcast(msg)
             except Exception:
                 try:
                     await asyncio.to_thread(self.client.refresh_access)

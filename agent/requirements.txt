@@ -5,4 +5,5 @@ psutil
 cryptography
 pystray
 pillow
+pywebview>=5.0
 pywin32; sys_platform == "win32"

@@ -1,37 +1,133 @@
 <!doctype html>
 <html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Hôm nay em đã dùng gì?</title>
+<meta name="theme-color" content="#fff7f2">
+<meta name="ogk-local-token" content="__OGK_LOCAL_TOKEN__">
+<title>OpenGuard Kids – Góc của con</title>
 <style>
-:root{--bg:#fffdf5;--fg:#222;--ac:#2b8a3e;--bd:#e3dfc8}
-@media(prefers-color-scheme:dark){:root{--bg:#1b1d22;--fg:#eee;--bd:#3a3f4a}}
-body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--fg);max-width:640px;margin:0 auto;padding:1rem;font-size:1.1rem}
-h1{font-size:1.6rem}h2{font-size:1.15rem;margin-top:1.4rem}.card{border:2px solid var(--bd);border-radius:14px;padding:.8rem;margin:.6rem 0}
-.big{font-size:2.2rem;font-weight:700;color:var(--ac)}.bar{height:16px;background:var(--ac);border-radius:8px;min-width:4px}
-.row{display:flex;align-items:center;gap:.6rem;margin:.3rem 0}.l{width:8rem;overflow:hidden;text-overflow:ellipsis}small,.mut{color:#777}
+:root{color-scheme:light;--bg:#fff8f3;--paper:#fff;--ink:#382f3b;--muted:#817783;--line:#eee5ed;--purple:#8057b7;--purple-dark:#68439b;--lav:#f1eaff;--pink:#ffe9ef;--mint:#e7f6ed;--yellow:#fff2ce;--red:#b94d67;--shadow:0 13px 34px #52345510}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 6% 2%,#ffe6ed 0,transparent 28rem),radial-gradient(ellipse at 98% 20%,#ebe3ff 0,transparent 29rem),var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif}
+button,input,textarea{font:inherit}
+.top{height:62px;padding:0 max(1rem,calc((100vw - 1120px)/2));display:flex;align-items:center;justify-content:space-between;background:#ffffffd9;border-bottom:1px solid #fff;backdrop-filter:blur(14px);position:sticky;top:0;z-index:2}
+.brand{display:flex;align-items:center;gap:.65rem;font-weight:850;letter-spacing:-.025em}.mark{width:36px;height:36px;border-radius:13px;background:linear-gradient(145deg,#fff,#f0e6ff);display:grid;place-items:center;font-size:1.15rem;box-shadow:0 4px 10px #8057b718}.privacy{color:var(--muted);font-size:.8rem}
+main{width:min(calc(100% - 2rem),1120px);margin:1.25rem auto 2.5rem}
+.hero{position:relative;display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:158px;padding:1.35rem 1.7rem;overflow:hidden;border:1px solid #fff;border-radius:25px;background:linear-gradient(115deg,#f0e8ff,#fff 55%,#fff0f2);box-shadow:var(--shadow)}
+.hero-copy{position:relative;z-index:1;max-width:740px}.eyebrow{display:inline-flex;align-items:center;gap:.35rem;padding:.24rem .6rem;border-radius:99px;background:#fff9;color:var(--purple-dark);font-size:.75rem;font-weight:800;letter-spacing:.035em}
+h1{font-size:clamp(1.55rem,3vw,2.15rem);line-height:1.15;letter-spacing:-.045em;margin:.5rem 0 .4rem}h2{font-size:1rem;letter-spacing:-.02em;margin:0}p{margin:.25rem 0}.mut{color:var(--muted)}.small{font-size:.82rem}
+.mascot{position:relative;z-index:1;flex:none;width:104px;height:104px;border-radius:34px;display:grid;place-items:center;background:linear-gradient(145deg,#fff,#f9eafa);font-size:3.4rem;box-shadow:0 10px 24px #68439b18;transform:rotate(3deg);animation:floaty 4s ease-in-out infinite}
+.status{min-height:1.25rem;margin:.35rem .3rem;font-size:.82rem;color:var(--muted)}.status.error{color:var(--red);font-weight:700}.status.ok{color:#347b54;font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.7rem;margin:.5rem 0 .8rem}.card{background:var(--paper);border:1px solid #fff;border-radius:18px;padding:.95rem;box-shadow:var(--shadow)}
+.stat{position:relative;min-height:100px;overflow:hidden;transition:transform .2s,box-shadow .2s}.stat:hover,.panel:hover{transform:translateY(-2px);box-shadow:0 17px 35px #52345516}.stat:nth-child(1){background:linear-gradient(145deg,#fff,#f4efff)}.stat:nth-child(2){background:linear-gradient(145deg,#fff,#fff4e3)}.stat:nth-child(3){background:linear-gradient(145deg,#fff,#edf8f0)}
+.stat-top{display:flex;align-items:center;justify-content:space-between;gap:.4rem}.stat-icon,.panel-icon{width:32px;height:32px;border-radius:11px;display:grid;place-items:center;background:#ffffffb8;font-size:1rem}.stat-label{font-size:.78rem;color:var(--muted);font-weight:650}.stat-value{display:block;margin-top:.35rem;font-size:1.45rem;line-height:1.2;letter-spacing:-.04em;font-weight:850}.stat-value.long{font-size:.96rem;letter-spacing:0}
+.stat-hint{display:block;margin-top:.2rem;color:var(--muted);font-size:.68rem;line-height:1.3}.stat.remaining{background:linear-gradient(145deg,#fff,#f4efff)}.stat.remaining .stat-icon{background:var(--lav)}
+.content-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:.8rem;align-items:start}.panel{transition:transform .2s,box-shadow .2s}.panel-head{display:flex;align-items:center;gap:.6rem;margin-bottom:.65rem}.panel-icon{width:35px;height:35px;background:var(--lav);font-size:1.05rem;flex:none}.panel:nth-child(2) .panel-icon,.panel.mint .panel-icon{background:var(--mint)}.panel:nth-child(3) .panel-icon{background:var(--yellow)}.panel:nth-child(4) .panel-icon{background:var(--pink)}
+.panel-sub{font-size:.76rem;color:var(--muted);margin-top:.1rem}.usage-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}.chart-list{display:grid;gap:.55rem}.chart-row{display:grid;grid-template-columns:minmax(70px,120px) 1fr auto;gap:.5rem;align-items:center;font-size:.8rem}.chart-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#5c5260}.track{height:9px;border-radius:99px;background:#f1edf4;overflow:hidden}.bar{height:100%;min-width:2px;border-radius:99px;background:linear-gradient(90deg,#a78bd8,#e5a3b5);transform-origin:left;animation:grow .55s cubic-bezier(.2,.75,.3,1) both}.chart-value{font-size:.73rem;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.empty{padding:.75rem;border:1px dashed #e3d7e7;border-radius:13px;background:#fff9;color:var(--muted);font-size:.8rem;text-align:center}
+.request-grid{display:grid;grid-template-columns:1fr 1fr;gap:.65rem}.request{border:1px solid var(--line);border-radius:15px;background:linear-gradient(145deg,#fff,#fffafd);overflow:hidden;transition:border-color .2s,transform .2s}.request:hover{border-color:#dac9ec;transform:translateY(-1px)}.request summary{display:flex;align-items:center;gap:.55rem;padding:.75rem .8rem;list-style:none;cursor:pointer;font-size:.84rem;font-weight:750}.request summary::-webkit-details-marker{display:none}.request summary:after{content:"＋";margin-left:auto;color:var(--purple);font-size:1.05rem}.request[open] summary:after{content:"−"}.request-body{padding:0 .8rem .8rem}
+label{display:block;color:var(--muted);font-size:.77rem;font-weight:650;margin:.35rem 0 .12rem}
+input,textarea{width:100%;margin:.25rem 0 .55rem;padding:.58rem .7rem;border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--ink);transition:border-color .18s,box-shadow .18s}
+input:focus,textarea:focus{outline:0;border-color:#b79ad9;box-shadow:0 0 0 3px #8057b71b}textarea{resize:vertical}
+button{border:1px solid transparent;border-radius:11px;padding:.58rem .78rem;background:var(--purple);color:#fff;font-weight:750;font-size:.8rem;box-shadow:0 3px 0 #644493;cursor:pointer;transition:transform .16s,box-shadow .16s,background .16s}
+button:hover{background:var(--purple-dark);transform:translateY(-1px);box-shadow:0 5px 12px #68439b2b}button:active{transform:translateY(1px);box-shadow:none}button:disabled{opacity:.58;cursor:wait}
+.activity-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-top:.8rem}.activity{display:grid;gap:.45rem;max-height:300px;overflow:auto}.activity-item{padding:.65rem .75rem;border:1px solid var(--line);border-radius:13px;background:#fff;font-size:.8rem;overflow-wrap:anywhere;animation:rise .3s ease both}.activity-meta{margin-top:.18rem;color:var(--muted);font-size:.72rem}.audit-entry{display:flex;gap:.55rem;align-items:flex-start}.audit-entry-icon{width:29px;height:29px;display:grid;place-items:center;flex:none;border-radius:10px;background:var(--lav)}.audit-entry-content{min-width:0}.audit-entry-title{font-weight:800;line-height:1.35}.audit-entry-detail{margin-top:.18rem;color:var(--muted);font-size:.74rem}.pill{display:inline-flex;margin-top:.3rem;padding:.16rem .5rem;border-radius:99px;background:var(--mint);color:#31724c;font-size:.7rem;font-weight:800}.pill.pending{background:var(--yellow);color:#916314}
+.privacy-note{display:flex;gap:.65rem;align-items:center;margin-top:.8rem;padding:.75rem .85rem;border:1px solid #e7eee8;border-radius:15px;background:#f6fbf7}.privacy-note>span{font-size:1.25rem}.privacy-note strong{display:block;font-size:.81rem}.privacy-note div{font-size:.75rem;color:var(--muted)}
+footer{text-align:center;color:var(--muted);font-size:.73rem;padding:1rem 0 .2rem}
+@keyframes grow{from{transform:scaleX(.04);opacity:.45}to{transform:scaleX(1);opacity:1}}@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}@keyframes floaty{0%,100%{transform:translateY(0) rotate(3deg)}50%{transform:translateY(-4px) rotate(0)}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){main{width:min(calc(100% - 1rem),1120px);margin:.7rem auto 1.5rem}.content-grid{grid-template-columns:1fr}.hero{min-height:140px;padding:1.1rem 1.2rem}.mascot{width:76px;height:76px;border-radius:26px;font-size:2.5rem}.activity-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.top{height:56px}.privacy{font-size:.7rem}.stats{gap:.45rem}.stat{padding:.7rem;min-height:92px}.stat-label{font-size:.68rem}.stat-value{font-size:1.2rem}.stat-value.long{font-size:.8rem}.stat-icon{width:27px;height:27px}.usage-grid,.request-grid,.activity-grid{grid-template-columns:1fr}.hero{align-items:flex-start}.mascot{width:58px;height:58px;font-size:1.9rem;border-radius:21px}.chart-row{grid-template-columns:82px 1fr auto}.card{padding:.8rem}}
 </style></head><body>
-<h1>🌟 Hôm nay em đã dùng gì?</h1>
-<p class="mut">Đây là đúng những gì ba mẹ cũng nhìn thấy. Máy chỉ ghi <b>tên ứng dụng, tên trang web và thời gian</b> – không ghi tin nhắn, không ghi phím gõ, không chụp màn hình.</p>
-<div id="err" class="mut"></div>
-<div class="card"><div>Hôm nay em đã dùng máy</div><div class="big" id="min">…</div></div>
-<h2>📱 Ứng dụng em dùng nhiều nhất <small>(số phút)</small></h2><div id="apps"></div>
-<h2>🌐 Trang web em hay vào</h2><div id="doms"></div>
-<div class="card">🚧 Có <b id="blk">0</b> lần máy đã chặn một thứ gì đó hôm nay. Nếu em nghĩ bị chặn nhầm, bấm biểu tượng OpenGuard Kids ở góc màn hình rồi chọn “Con nghĩ trang này bị chặn nhầm”.</div>
-<h2>💬 Những yêu cầu của em</h2><div id="help"></div>
-<h2>📜 Ai đã đổi luật, lúc nào?</h2><div id="aud"></div>
+<header class="top"><div class="brand"><span class="mark">🌈</span><span>OpenGuard Kids</span></div><span class="privacy">Góc nhỏ an toàn của con ✨</span></header>
+<main>
+  <section class="hero"><div class="hero-copy"><span class="eyebrow">Chào con 👋 · <span id="todayDate">Hôm nay</span></span><h1>Góc nhỏ của con 🌷</h1>
+    <p class="mut small">Cùng xem hôm nay con đã dùng máy thế nào nhé. Ba mẹ cũng xem được đúng những thông tin này — không có tin nhắn, phím gõ hay ảnh màn hình.</p></div><div class="mascot" aria-hidden="true">🐻</div>
+  </section>
+  <div id="status" class="status" role="status" aria-live="polite"></div>
+  <section class="stats" aria-label="Tóm tắt hôm nay">
+    <article class="card stat remaining"><div class="stat-top"><span class="stat-label">Thời gian còn dùng</span><span class="stat-icon">⏰</span></div><strong class="stat-value" id="remaining">Đang tính…</strong><span class="stat-hint" id="remainingHint">Đang tải trạng thái máy</span></article>
+    <article class="card stat"><div class="stat-top"><span class="stat-label">Thời gian sử dụng</span><span class="stat-icon">⏳</span></div><strong class="stat-value" id="min">Đang tải…</strong></article>
+    <article class="card stat"><div class="stat-top"><span class="stat-label">Lượt được máy chặn</span><span class="stat-icon">🛡️</span></div><strong class="stat-value" id="blk">—</strong></article>
+    <article class="card stat"><div class="stat-top"><span class="stat-label">Kết nối gia đình</span><span class="stat-icon">💌</span></div><strong class="stat-value long" id="connection">Đang kiểm tra…</strong></article>
+  </section>
+  <div class="content-grid">
+    <section class="card panel"><div class="panel-head"><span class="panel-icon">🌼</span><div><h2>Dấu chân hôm nay</h2><div class="panel-sub">Ứng dụng và trang web con đã dùng</div></div></div>
+      <div class="usage-grid"><div><div class="panel-sub">📱 Ứng dụng · phút</div><div id="apps" class="chart-list"><div class="mut small">Đang tải…</div></div></div>
+        <div><div class="panel-sub">🌐 Trang web · lượt</div><div id="doms" class="chart-list"><div class="mut small">Đang tải…</div></div></div></div>
+    </section>
+    <section class="card panel mint"><div class="panel-head"><span class="panel-icon">💌</span><div><h2>Gửi lời nhắn ba mẹ</h2><div class="panel-sub">Ba mẹ sẽ xem rồi trả lời con nhé</div></div></div>
+      <div class="request-grid">
+        <details class="request"><summary>⏰ Xin thêm thời gian</summary><div class="request-body">
+          <label for="minutes">Con xin thêm bao nhiêu phút? (1–120)</label><input id="minutes" type="number" min="1" max="120" value="15">
+          <label for="note">Lời nhắn (không bắt buộc)</label><textarea id="note" rows="2" maxlength="500" placeholder="Con muốn hoàn thành bài tập…"></textarea>
+          <button id="moreTime" type="button">💜 Gửi lời xin</button>
+        </div></details>
+        <details class="request"><summary>🌐 Báo trang bị chặn nhầm</summary><div class="request-body">
+          <label for="domain">Tên miền trang web</label><input id="domain" type="text" maxlength="253" placeholder="example.com">
+          <button id="wrongBlock" type="button">🌷 Gửi báo cáo</button>
+        </div></details>
+      </div>
+    </section>
+  </div>
+  <section class="activity-grid">
+    <article class="card panel"><div class="panel-head"><span class="panel-icon">📨</span><div><h2>Lời nhắn của con</h2><div class="panel-sub">Xem ba mẹ đã phản hồi chưa</div></div></div><div id="help" class="activity"><div class="mut small">Đang tải…</div></div></article>
+    <article class="card panel"><div class="panel-head"><span class="panel-icon">📜</span><div><h2>Nhật ký quy tắc</h2><div class="panel-sub">Những thay đổi ba mẹ đã thực hiện</div></div></div><div id="aud" class="activity"><div class="mut small">Đang tải…</div></div></article>
+  </section>
+  <div class="privacy-note"><span>🧸</span><div><strong>Minh bạch và an toàn</strong>Máy chỉ ghi tên ứng dụng, tên miền và thời lượng sử dụng.</div></div>
+  <footer>OpenGuard Kids · Cùng con xây dựng thói quen số lành mạnh 💚</footer>
+</main>
 <script>
 const $=id=>document.getElementById(id);
-function row(label,val,max){const d=document.createElement('div');d.className='row';
-  const l=document.createElement('span');l.className='l';l.textContent=label;const b=document.createElement('div');b.className='bar';b.style.width=Math.max(4,Math.round(val/max*55))+'%';
-  const v=document.createElement('small');v.textContent=val;d.append(l,b,v);return d}
-function line(t){const d=document.createElement('div');d.className='card';d.textContent=t;return d}
-async function get(p){const r=await fetch(p);if(!r.ok)throw new Error('offline');return r.json()}
-const ST={pending:'đang chờ ba mẹ',approved:'ba mẹ đồng ý ✅',denied:'ba mẹ chưa đồng ý'};
-(async()=>{
- try{const t=await get('/api/today');$('min').textContent=Math.round(t.minutes_today)+' phút';$('blk').textContent=t.blocked;
-  const ma=Math.max(1,...t.top_apps.map(x=>x.minutes));$('apps').replaceChildren(...(t.top_apps.length?t.top_apps.map(x=>row(x.name,x.minutes,ma)):[line('Chưa có gì.')]));
-  const md=Math.max(1,...t.top_domains.map(x=>x.count));$('doms').replaceChildren(...(t.top_domains.length?t.top_domains.map(x=>row(x.name,x.count,md)):[line('Chưa có gì.')]));
- }catch(e){$('err').textContent='Chưa kết nối được với máy chủ của ba mẹ, nên chưa có số liệu mới.'}
- try{const h=await get('/api/help');$('help').replaceChildren(...(h.length?h.map(x=>line(`${x.kind==='more_time'?'Xin thêm '+x.minutes+' phút':'Báo chặn nhầm '+x.subject} → ${ST[x.status]}${x.reply?': “'+x.reply+'”':''}`)):[line('Em chưa gửi yêu cầu nào.')]))}catch(e){}
- try{const a=await get('/api/audit');$('aud').replaceChildren(...(a.length?a.map(x=>line(`${x.ts} – ${x.who||'hệ thống'}: ${x.action}${x.changed.length?' ('+x.changed.join(', ')+')':''}`)):[line('Chưa có thay đổi.')]))}catch(e){}
-})();
+const localToken=document.querySelector('meta[name="ogk-local-token"]').content;
+let loadingHelp=false;
+function item(text,meta=''){const d=document.createElement('div');d.className='activity-item';const t=document.createElement('div');t.textContent=text;d.append(t);if(meta){const m=document.createElement('div');m.className='activity-meta';m.textContent=meta;d.append(m)}return d}
+function empty(text){const d=document.createElement('div');d.className='empty';d.textContent=text;return d}
+function chartRow(label,value,max,unit){const row=document.createElement('div');row.className='chart-row';const name=document.createElement('span');name.className='chart-label';name.textContent=label;const track=document.createElement('div');track.className='track';const bar=document.createElement('div');bar.className='bar';bar.style.width=Math.max(2,Math.round(value/max*100))+'%';track.append(bar);const val=document.createElement('span');val.className='chart-value';val.textContent=`${value} ${unit}`;row.append(name,track,val);return row}
+async function get(path){const response=await fetch(path);if(!response.ok)throw new Error(response.status===503?'Máy chủ gia đình chưa phản hồi.':'Không tải được dữ liệu.');return response.json()}
+async function getLocalState(){const response=await fetch('/api/state',{headers:{'X-OGK-Token':localToken}});if(!response.ok)throw new Error('Không đọc được trạng thái sử dụng từ agent.');return response.json()}
+async function sendHelp(payload){const response=await fetch('/api/help',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error==='offline'?'Chưa gửi được vì máy chủ gia đình đang ngoại tuyến.':data.detail||'Gửi yêu cầu thất bại.');return data}
+function message(text,kind=''){const node=$('status');node.textContent=text;node.className='status'+(kind?' '+kind:'')}
+const stateText={pending:'Đang chờ ba mẹ',approved:'Ba mẹ đã đồng ý 💚',denied:'Ba mẹ chưa đồng ý'};
+function renderDate(){ $('todayDate').textContent=new Intl.DateTimeFormat('vi-VN',{weekday:'long',day:'numeric',month:'long'}).format(new Date())}
+async function loadRemaining(){try{const state=await getLocalState(),value=$('remaining'),hint=$('remainingHint');
+ if(state.revoked){value.textContent='Đã thu hồi';hint.textContent='Ba mẹ đã gỡ thiết bị này';return}
+ if(state.suspended){value.textContent='Đang tạm dừng';hint.textContent='Agent chưa nhận được tín hiệu từ ứng dụng khay';return}
+ if(state.locked){value.textContent='Đã tạm khóa';hint.textContent=state.reason||'Thiết bị đang bị khóa';return}
+ if(state.remaining_sec!==null&&state.remaining_sec!==undefined){const sec=Math.max(0,state.remaining_sec),mins=Math.ceil(sec/60);value.textContent=mins>=60?`${Math.floor(mins/60)} giờ ${mins%60} phút`:`${mins} phút`;hint.textContent=state.in_grace?'Đang trong thời gian gia hạn ngắn':state.online?'Cập nhật trực tiếp từ agent':'Đang dùng chính sách đã lưu trên máy';return}
+ if(state.policy_version===0){value.textContent='Đang chờ';hint.textContent='Agent chưa nhận được chính sách';return}
+ if(state.expired){value.textContent='Không giới hạn';hint.textContent='Chính sách đã hết hạn khi mất kết nối lâu';return}
+ value.textContent='Không giới hạn';hint.textContent=state.reason||'Không có hạn mức thời gian áp dụng';
+ }catch(error){$('remaining').textContent='Chưa có';$('remainingHint').textContent='Không đọc được trạng thái agent';message(error.message,'error')}}
+async function loadToday(){try{const t=await get('/api/today');$('min').textContent=`${Math.round(t.minutes_today)} phút`;$('blk').textContent=t.blocked;$('connection').textContent='Đã đồng bộ ✓';
+ const apps=$('apps'),domains=$('doms');apps.replaceChildren();domains.replaceChildren();
+ if(t.top_apps.length){const max=Math.max(1,...t.top_apps.map(x=>x.minutes));t.top_apps.forEach(x=>apps.append(chartRow(x.name,x.minutes,max,'phút')))}else apps.append(empty('Hôm nay chưa có dữ liệu ứng dụng.'));
+ if(t.top_domains.length){const max=Math.max(1,...t.top_domains.map(x=>x.count));t.top_domains.forEach(x=>domains.append(chartRow(x.name,x.count,max,'lượt')))}else domains.append(empty('Hôm nay chưa có dữ liệu trang web.'));
+ }catch(error){$('connection').textContent='Chưa kết nối';$('min').textContent='Chưa có';$('blk').textContent='—';$('apps').replaceChildren(empty('Chưa tải được báo cáo.'));$('doms').replaceChildren(empty('Chưa tải được báo cáo.'));message(error.message,'error')}}
+async function loadHelp(){if(loadingHelp)return;loadingHelp=true;try{const rows=await get('/api/help'),target=$('help');target.replaceChildren();if(!rows.length){target.append(empty('Con chưa gửi lời nhắn nào 🌱'));return}
+ rows.forEach(x=>{const title=x.kind==='more_time'?`Xin thêm ${x.minutes} phút`:`Báo chặn nhầm: ${x.subject}`;const status=document.createElement('span');status.className='pill'+(x.status==='pending'?' pending':'');status.textContent=stateText[x.status]||x.status;const text=x.reply?`Ba mẹ nhắn: “${x.reply}”`:'';const card=item(title,text);card.append(status);target.append(card)})}catch(error){$('help').replaceChildren(empty('Chưa tải được danh sách lời nhắn.'));message(error.message,'error')}finally{loadingHelp=false}}
+function connectHelpEvents(){if(location.protocol!=='http:'||location.hostname!=='127.0.0.1')return;
+ const socket=new WebSocket(`ws://${location.host}/api/events?token=${encodeURIComponent(localToken)}`);
+ socket.onopen=()=>loadHelp();
+ socket.onmessage=event=>{try{const update=JSON.parse(event.data);if(update.type==='help_decided'||update.type==='refresh_help')loadHelp()}catch(error){message('Không đọc được thông báo từ máy chủ.','error')}};
+ socket.onclose=()=>setTimeout(connectHelpEvents,3000);
+ socket.onerror=()=>socket.close()}
+const auditActions={policy_update:['🛡️','Ba mẹ cập nhật quy tắc sử dụng'],policy_update_from_request:['🌐','Ba mẹ cập nhật quy tắc theo lời nhắn'],request_decided:['💌','Ba mẹ đã phản hồi lời nhắn'],command_lock:['🔒','Ba mẹ tạm khóa thiết bị'],command_unlock:['🔓','Ba mẹ mở khóa thiết bị'],command_add_minutes:['⏰','Ba mẹ cộng thêm thời gian'],command_wipe_cache:['🧹','Ba mẹ xóa dữ liệu đã lưu'],device_enrolled:['💻','Thiết bị này được thêm vào tài khoản'],device_revoked:['🚫','Thiết bị này bị gỡ khỏi tài khoản'],device_uninstalled:['🗑️','OpenGuard Kids được gỡ khỏi thiết bị'],data_deleted:['🧽','Dữ liệu sử dụng đã được xóa']};
+const auditFields={quota_min_weekday:'Thời lượng ngày trong tuần',quota_min_weekend:'Thời lượng cuối tuần',schedule:'Khung giờ được phép',blocked_categories:'Nhóm nội dung bị chặn',domain_rules:'Quy tắc trang web',app_rules:'Quy tắc ứng dụng',app_mode:'Cách áp dụng quy tắc ứng dụng',block_uncategorized:'Trang chưa phân loại',safesearch:'Tìm kiếm an toàn',tz_offset_min:'Múi giờ',minutes:'Thời gian được cộng',events:'Số mục dữ liệu',device:'Thiết bị',consent:'Sự đồng ý',status:'Kết quả',reply:'Lời nhắn của ba mẹ',kind:'Loại yêu cầu'};
+function auditTime(value){const raw=String(value||''),date=new Date(/[zZ]|[+-]\d\d:\d\d$/.test(raw)?raw:raw+'Z');return Number.isNaN(date.getTime())?raw:date.toLocaleString('vi-VN')}
+function auditDetails(entry){const changed=entry.changed||[],details=entry.details||{};
+ if(entry.action==='request_decided'){const result=details.status==='approved'?'Đã đồng ý':details.status==='denied'?'Chưa đồng ý':'Đã xem';const reply=details.reply?` · Ba mẹ nhắn: “${details.reply}”`:'';return `Kết quả: ${result}${reply}`}
+ if(entry.action==='command_add_minutes'&&details.minutes)return `Được cộng thêm ${details.minutes} phút`;
+ if(entry.action==='data_deleted'&&details.events!==undefined)return `Đã xóa ${details.events} mục dữ liệu`;
+ if(entry.action==='device_enrolled'&&details.device)return `Thiết bị: ${details.device}`;
+ return changed.map(key=>auditFields[key]||key.replaceAll('_',' ')).join(', ')}
+async function loadAudit(){try{const rows=await get('/api/audit'),target=$('aud');target.replaceChildren();if(!rows.length){target.append(empty('Chưa có thay đổi quy tắc nào ✨'));return}
+ rows.forEach(x=>{const [icon,title]=auditActions[x.action]||['🪄','Có thay đổi trong cài đặt gia đình'];const changed=auditDetails(x);const entry=document.createElement('div');entry.className='audit-entry';const badge=document.createElement('span');badge.className='audit-entry-icon';badge.setAttribute('aria-hidden','true');badge.textContent=icon;const content=document.createElement('div');content.className='audit-entry-content';const heading=document.createElement('div');heading.className='audit-entry-title';heading.textContent=title;const actor=document.createElement('div');actor.className='activity-meta';actor.textContent=`Thực hiện bởi ${x.who||'ba mẹ'} · ${auditTime(x.ts)}`;content.append(heading,actor);if(changed){const detail=document.createElement('div');detail.className='audit-entry-detail';detail.textContent=changed;content.append(detail)}entry.append(badge,content);target.append(entry)})}catch(error){$('aud').replaceChildren(empty('Chưa tải được nhật ký.'));message(error.message,'error')}}
+renderDate();
+$('moreTime').addEventListener('click',async()=>{const minutes=Number($('minutes').value);if(!Number.isInteger(minutes)||minutes<1||minutes>120){message('Con nhập số phút từ 1 đến 120 nhé.','error');return}
+ const button=$('moreTime');button.disabled=true;try{await sendHelp({kind:'more_time',minutes,note:$('note').value.trim()});$('note').value='';message('Đã gửi lời xin cho ba mẹ 💌','ok');await loadHelp()}catch(error){message(error.message,'error')}finally{button.disabled=false}});
+$('wrongBlock').addEventListener('click',async()=>{const subject=$('domain').value.trim().toLowerCase().replace(/^https?:\/\//,'').split(/[/?#]/)[0];if(!subject||subject.includes(' ')||!subject.includes('.')){message('Con hãy nhập tên miền, ví dụ example.com.','error');return}
+ const button=$('wrongBlock');button.disabled=true;try{await sendHelp({kind:'wrong_block',subject});$('domain').value='';message('Đã gửi báo cáo cho ba mẹ 🌷','ok');await loadHelp()}catch(error){message(error.message,'error')}finally{button.disabled=false}});
+Promise.all([loadRemaining(),loadToday(),loadHelp(),loadAudit()]);
+setInterval(loadRemaining,5000);
+connectHelpEvents();
 </script></body></html>

@@ -33,6 +33,7 @@ python service.py --startup auto install && sc failure OGKAgent reset= 86400 act
 net start OGKAgent        # service dùng cổng 53/80 và đổi DNS hệ thống về 127.0.0.1
 python agent.py tray      # đặt vào Startup của tài khoản trẻ (biểu tượng khay luôn hiển thị)
 ```
+Lệnh `tray` tạo biểu tượng ở khay hệ thống; chọn **Mở ứng dụng OpenGuard Kids** để mở UI trong cửa sổ desktop riêng (WebView2 trên Windows). Có thể mở trực tiếp bằng `python agent.py ui`. Cần chạy agent bằng `python agent.py run` hoặc Windows Service trước; giao diện được phục vụ local tại `http://127.0.0.1:47800`, hiển thị thời gian quota còn lại và cập nhật trạng thái lời nhắn qua WebSocket ngay khi phụ huynh đồng ý hoặc từ chối (khi agent đang kết nối server). Dashboard phụ huynh cập nhật huy hiệu số yêu cầu đang chờ trên tab **Yêu cầu của con** mỗi 5 giây.
 Gỡ hợp pháp: `python agent.py uninstall --email <email phụ huynh>` (nhập mật khẩu ngay trên máy trẻ; có ghi nhật ký) rồi `python service.py remove`.
 
 ## Kiểm thử

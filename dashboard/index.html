@@ -3,38 +3,129 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>OpenGuard Kids – Phụ huynh</title>
 <style>
-:root{--bg:#fff;--fg:#1c1c1e;--mut:#6b7280;--bd:#d8dce2;--ac:#2b8a3e}
-@media(prefers-color-scheme:dark){:root{--bg:#16181d;--fg:#eceff4;--mut:#9aa3b2;--bd:#343a46}}
-*{box-sizing:border-box}body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--fg);max-width:760px;margin:0 auto;padding:.75rem}
-h1{font-size:1.3rem;margin:.2rem 0}h2{font-size:1.05rem;margin:1rem 0 .4rem}
-input,select,button,textarea{font:inherit;padding:.45rem .6rem;margin:.15rem 0;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--fg)}
-button{cursor:pointer}button.p{background:var(--ac);color:#fff;border-color:var(--ac)}button.d{color:#c92a2a;border-color:#c92a2a}
-.card{border:1px solid var(--bd);border-radius:10px;padding:.7rem;margin:.6rem 0}.mut{color:var(--mut);font-size:.9rem}
-nav{display:flex;gap:.3rem;flex-wrap:wrap;margin:.5rem 0}nav button.on{background:var(--ac);color:#fff}
-#msg{color:#c92a2a;min-height:1.2em}.ok{color:var(--ac)}
-.grid{overflow-x:auto}.row{display:flex;align-items:center;white-space:nowrap}.row b{width:2.2rem;font-size:.8rem}
-.c{width:12px;height:16px;border:1px solid var(--bd);margin:0;cursor:pointer;flex:none}.c.on{background:var(--ac)}.c.h{margin-left:3px}
-.bar{height:14px;background:var(--ac);border-radius:3px;min-width:1px}.br{display:flex;gap:.5rem;align-items:center;font-size:.85rem;margin:2px 0}.br span.l{width:5.5rem;flex:none}
-table{border-collapse:collapse;width:100%;font-size:.85rem}td,th{border-bottom:1px solid var(--bd);padding:.3rem;text-align:left;vertical-align:top}
+:root{color-scheme:light;--bg:#fff8f1;--paper:#fff;--ink:#362d3b;--muted:#817584;--line:#eee4ec;--purple:#8055bd;--purple-dark:#68419f;--lav:#f2eaff;--pink:#ffe9ef;--mint:#e5f6ed;--yellow:#fff3ce;--red:#bf5368;--shadow:0 16px 40px #58335d12;--round:22px}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;background:radial-gradient(ellipse at 8% 4%,#ffe7ed 0,transparent 27rem),radial-gradient(ellipse at 95% 18%,#e9e0ff 0,transparent 28rem),var(--bg)}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.topbar{height:76px;padding:0 clamp(1rem,5vw,5rem);display:flex;align-items:center;justify-content:space-between;background:#fff9;border-bottom:1px solid #fff;backdrop-filter:blur(16px);position:sticky;top:0;z-index:3}
+.brand{display:flex;align-items:center;gap:.75rem;font-weight:900;letter-spacing:-.04em;font-size:1.12rem}.brandmark{display:grid;place-items:center;width:44px;height:44px;border:1px solid #f3e7ff;border-radius:16px;background:linear-gradient(145deg,#fff,#f0e4ff);font-size:1.35rem;box-shadow:0 5px 12px #8055bd18}.topnote{font-size:.88rem;color:var(--muted)}
+.wrap{width:min(1160px,calc(100% - 2rem));margin:2rem auto 4rem}
+h1{font-size:clamp(1.65rem,3.2vw,2.45rem);letter-spacing:-.055em;margin:.15rem 0 .5rem}h2{font-size:1.14rem;letter-spacing:-.025em;margin:1.35rem 0 .7rem}
+.mut{color:var(--muted);font-size:.9rem;line-height:1.6}.card{position:relative;background:var(--paper);border:1px solid #fff;border-radius:var(--round);padding:1.2rem;margin:.85rem 0;box-shadow:var(--shadow);transition:transform .24s ease,box-shadow .24s ease,border-color .24s ease}
+#view>.card:hover{transform:translateY(-3px);border-color:#eadcf8;box-shadow:0 20px 44px #58335d18}
+.auth-card{max-width:480px;margin:7vh auto;padding:clamp(1.5rem,5vw,2.5rem);overflow:hidden}
+.auth-card:before{content:"";position:absolute;width:170px;height:170px;border-radius:50%;background:var(--pink);right:-70px;top:-85px;opacity:.7}
+.auth-card>*{position:relative}.auth-card .brandmark{margin-bottom:1rem}
+.auth-card input{display:block;width:100%;margin:.6rem 0}
+input,select,textarea{padding:.72rem .85rem;border:1px solid var(--line);border-radius:13px;background:#fff;color:var(--ink);max-width:100%;transition:border-color .2s,box-shadow .2s,background .2s}
+input:focus,select:focus,textarea:focus{outline:0;border-color:#b795dc;box-shadow:0 0 0 4px #8055bd1c}
+button{padding:.68rem .95rem;border:1px solid var(--line);border-radius:13px;background:#fff;color:var(--ink);font-weight:750;box-shadow:0 3px 0 #32203a08;transition:transform .18s ease,box-shadow .18s ease,background .2s,border-color .2s,color .2s}
+button:hover{transform:translateY(-2px);box-shadow:0 7px 16px #58335d16;border-color:#d8c6ed}button:active{transform:translateY(1px) scale(.98);box-shadow:none}
+button.p{background:var(--purple);color:#fff;border-color:var(--purple);box-shadow:0 4px 0 #5d3c90}button.p:hover{background:var(--purple-dark);border-color:var(--purple-dark)}button.d{color:var(--red);border-color:#f4d6df;background:#fff7f8}
+.main-head{position:relative;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;padding:clamp(1.2rem,3vw,2rem);border-radius:28px;background:linear-gradient(115deg,#f0e8ff,#fff 58%,#fff0f2);border:1px solid #fff;box-shadow:var(--shadow);overflow:hidden}
+.main-head:after{content:"🐻";position:absolute;right:3%;bottom:-20px;font-size:clamp(4rem,9vw,7rem);opacity:.17;transform:rotate(-8deg);pointer-events:none}
+.main-head>div,.head-actions{position:relative;z-index:1}.main-head p{max-width:620px;margin:.2rem 0}.head-actions{display:flex;gap:.55rem;align-items:center;flex-wrap:wrap}#child{min-width:190px}
+nav{display:flex;gap:.48rem;flex-wrap:wrap;margin:1.25rem 0 .9rem;padding:.42rem;background:#fff9;border:1px solid #fff;border-radius:17px;width:fit-content;max-width:100%;box-shadow:0 8px 24px #58335d0b}
+nav button{position:relative;background:transparent;border-color:transparent;color:var(--muted);box-shadow:none}nav button:hover{background:#fff8}nav button.on{background:var(--lav);color:var(--purple-dark);border-color:#e5d6f7;box-shadow:0 3px 8px #8055bd14}
+.tab-badge{position:absolute;top:-.48rem;right:-.42rem;min-width:1.25rem;height:1.25rem;padding:0 .34rem;display:grid;place-items:center;border:2px solid #fff;border-radius:99px;background:#d9435d;color:#fff;font-size:.68rem;font-weight:900;line-height:1;box-shadow:0 2px 7px #a92d4544;animation:badge-pop .24s cubic-bezier(.2,.8,.3,1.2) both}
+#tab-status{min-height:1.2rem;margin:-.45rem 0 .5rem;color:var(--red);font-size:.78rem;font-weight:700}
+@keyframes badge-pop{from{transform:scale(.5);opacity:.4}to{transform:scale(1);opacity:1}}
+#msg{min-height:1.45rem;margin:.35rem 0;color:var(--red);font-weight:700}#msg.ok{color:#32805b!important}
+#view>h2:first-child{margin-top:.8rem}#view{animation:page-in .36s cubic-bezier(.2,.75,.3,1) both}#view>*{animation:rise-in .35s both}#view>*:nth-child(2){animation-delay:.04s}#view>*:nth-child(3){animation-delay:.08s}#view>*:nth-child(4){animation-delay:.12s}
+.grid{overflow-x:auto;padding:.8rem 0}.row{display:flex;align-items:center;white-space:nowrap}.row b{width:2.4rem;font-size:.8rem;color:var(--muted)}
+.c{width:13px;height:19px;border:1px solid var(--line);margin:0;cursor:pointer;flex:none;border-radius:5px;background:#fff8;transition:background .16s,transform .16s,border-color .16s}.c:hover{transform:scale(1.22)}.c.on{background:#7ac99e;border-color:#67bd8b;box-shadow:inset 0 0 0 2px #fff8}.c.h{margin-left:3px}
+.bar{height:12px;background:linear-gradient(90deg,#a78bd8,#e3a2b3);border-radius:99px;min-width:2px}.br{display:flex;gap:.7rem;align-items:center;font-size:.88rem;margin:.55rem 0}.br span.l{width:7rem;overflow:hidden;text-overflow:ellipsis;flex:none;color:var(--muted)}
+table{border-collapse:collapse;width:100%;font-size:.86rem;background:#fff;border-radius:14px;overflow:hidden}td,th{border-bottom:1px solid var(--line);padding:.72rem;text-align:left;vertical-align:top}th{color:var(--muted);font-weight:750;background:#fbf7ff}
+textarea{display:block;width:100%;margin:.65rem 0 1rem;resize:vertical}label{display:inline-flex;align-items:center;gap:.35rem;margin:.35rem .65rem .35rem 0}
+input[type=checkbox]{accent-color:var(--purple);width:1rem;height:1rem}
+#view:has(.policy-layout)>*{animation:none}
+.policy-layout{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:.8rem;align-items:start}
+.policy-card{margin:0;padding:1rem;border-color:#f0e7f5;border-radius:19px;box-shadow:0 9px 24px #58335d0b}
+.policy-card:hover{transform:translateY(-2px);box-shadow:0 14px 30px #58335d13}
+.policy-card.quota{grid-column:span 4}.policy-card.schedule-card{grid-column:span 8}.policy-card.web-card{grid-column:span 5}.policy-card.rules-card{grid-column:span 7}
+.policy-title{display:flex;align-items:center;gap:.65rem;margin:0 0 .7rem;font-size:1rem;letter-spacing:-.02em}
+.policy-icon{width:37px;height:37px;display:grid;place-items:center;border-radius:13px;background:var(--lav);font-size:1.1rem;flex:none}
+.policy-card:nth-child(2) .policy-icon{background:var(--mint)}.policy-card:nth-child(3) .policy-icon{background:var(--yellow)}.policy-card:nth-child(4) .policy-icon{background:var(--pink)}
+.policy-kicker{font-size:.75rem;color:var(--muted);font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.quota-pair{display:grid;grid-template-columns:1fr 1fr;gap:.55rem}.quota-box{padding:.65rem;border-radius:14px;background:#faf7ff;border:1px solid #f0e8f8}
+.quota-box.weekend{background:#f1faf5;border-color:#e3f1e8}.quota-box label{display:block;margin:0 0 .3rem;font-size:.77rem;color:var(--muted);font-weight:700}
+.quota-input{display:flex;align-items:center;gap:.35rem}.quota-input input{width:100%;min-width:0;padding:.48rem .55rem;font-size:1.15rem;font-weight:800}.quota-input span{font-size:.78rem;color:var(--muted)}
+.policy-hint{font-size:.78rem;color:var(--muted);margin:.55rem 0 0;line-height:1.45}
+.schedule-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap}.schedule-actions{display:flex;gap:.35rem}.schedule-actions button{padding:.4rem .6rem;font-size:.75rem;border-radius:10px}
+.schedule-grid{overflow:auto;padding:.6rem .2rem .3rem}.schedule-row{display:flex;align-items:center;gap:2px;min-width:590px;margin:.25rem 0}.schedule-day{width:29px;flex:none;color:var(--muted);font-size:.75rem;font-weight:800}
+.schedule-cell{width:10px;height:20px;flex:none;padding:0;border:1px solid #eae2ed;border-radius:4px;background:#faf8fb;box-shadow:none;transition:background .13s,border-color .13s,transform .13s}
+.schedule-cell:hover{transform:scaleY(1.14);box-shadow:none}.schedule-cell.on{background:#81cba0;border-color:#70bd8f;box-shadow:inset 0 0 0 1px #ffffff80}
+.schedule-cell.hour{margin-left:3px}.schedule-legend{display:flex;align-items:center;gap:.4rem;font-size:.74rem;color:var(--muted);margin-top:.35rem}.legend-dot{width:11px;height:11px;border-radius:4px;background:#81cba0}
+.category-grid{display:grid;grid-template-columns:1fr 1fr;gap:.45rem}.category-option{display:flex;align-items:center;gap:.5rem;padding:.6rem .65rem;border:1px solid var(--line);border-radius:13px;background:#fff9;cursor:pointer;font-size:.82rem;line-height:1.25;margin:0;transition:background .18s,border-color .18s,transform .18s}
+.category-option:hover{background:#faf6ff;border-color:#e4d6f2;transform:translateY(-1px)}.category-option input{margin:0;flex:none}
+.toggle-list{display:grid;gap:.45rem;margin-top:.7rem}.toggle-row{display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.55rem .65rem;border-radius:12px;background:#fff8;border:1px solid #f0e8ee;margin:0;font-size:.81rem}.toggle-row input{appearance:none;width:36px;height:21px;padding:0;border:0;border-radius:20px;background:#ddd4df;position:relative;cursor:pointer;flex:none;transition:background .2s}.toggle-row input:before{content:"";position:absolute;left:3px;top:3px;width:15px;height:15px;border-radius:50%;background:white;box-shadow:0 1px 4px #33223b38;transition:transform .2s}.toggle-row input:checked{background:#79c89a}.toggle-row input:checked:before{transform:translateX(15px)}
+.rule-editors{display:grid;grid-template-columns:1fr 1fr;gap:.65rem}.rule-group{min-width:0}.rule-label{display:flex;align-items:center;gap:.4rem;font-size:.82rem;font-weight:800}.rule-group textarea{min-height:102px;margin:.4rem 0 .5rem;padding:.65rem;font: .78rem/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}
+.rule-mode{width:100%;font-size:.8rem;padding:.55rem;margin:.2rem 0 .35rem}.policy-save{grid-column:1/-1;display:flex;justify-content:flex-end;align-items:center;gap:.8rem;padding:.2rem .1rem}.policy-save .mut{font-size:.79rem}.policy-save button{padding:.75rem 1.1rem}
+.view-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:.8rem;flex-wrap:wrap;margin:.35rem 0 .8rem}
+.view-heading h2{margin:0}.view-heading p{margin:.25rem 0 0}
+.view-icon{display:inline-grid;place-items:center;width:36px;height:36px;border-radius:13px;background:var(--lav);font-size:1.08rem;flex:none}
+.ui-card{margin:0;padding:1rem;border-color:#f0e7f5;border-radius:19px;box-shadow:0 9px 24px #58335d0b}
+.ui-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:.8rem;margin:.75rem 0}
+.ui-span-12{grid-column:span 12}.ui-span-8{grid-column:span 8}.ui-span-7{grid-column:span 7}.ui-span-6{grid-column:span 6}.ui-span-5{grid-column:span 5}.ui-span-4{grid-column:span 4}
+.ui-card-head{display:flex;align-items:center;gap:.65rem;margin-bottom:.65rem}.ui-card-head h3{font-size:.98rem;margin:0;letter-spacing:-.02em}.ui-card-head p{margin:.12rem 0 0;font-size:.78rem}
+.ui-card-head .view-icon{background:var(--lav)}.ui-card:nth-child(2) .view-icon{background:var(--mint)}.ui-card:nth-child(3) .view-icon{background:var(--yellow)}.ui-card:nth-child(4) .view-icon{background:var(--pink)}
+.ui-card:hover{transform:translateY(-2px);box-shadow:0 14px 30px #58335d13}
+.enroll-box{display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;padding:.75rem;border-radius:15px;background:#faf6ff;border:1px dashed #d9c6ef}
+.pair-code{font-size:1.2rem;letter-spacing:.12em;font-weight:900;color:var(--purple-dark);font-variant-numeric:tabular-nums}
+.device-list,.request-list,.audit-list{display:grid;gap:.6rem}
+.audit-list{max-height:min(65vh,560px);overflow-y:auto;overscroll-behavior:contain;padding:.2rem .55rem .2rem .1rem;scrollbar-gutter:stable}
+.audit-list::-webkit-scrollbar{width:8px}.audit-list::-webkit-scrollbar-track{border-radius:99px;background:#f7f2f8}.audit-list::-webkit-scrollbar-thumb{border:2px solid #f7f2f8;border-radius:99px;background:#cbb9d8}.audit-list{scrollbar-width:thin;scrollbar-color:#cbb9d8 #f7f2f8}
+.device-item,.request-item,.audit-item{padding:.8rem;border:1px solid var(--line);border-radius:15px;background:linear-gradient(130deg,#fff,#fffcff);transition:transform .18s,border-color .18s,box-shadow .18s}
+.device-item:hover,.request-item:hover,.audit-item:hover{transform:translateY(-2px);border-color:#e3d5f1;box-shadow:0 8px 20px #58335d0e}
+.item-top{display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap}.item-title{font-weight:850}.item-meta{font-size:.8rem;color:var(--muted);line-height:1.55;margin-top:.3rem}
+.badge{display:inline-flex;align-items:center;gap:.3rem;border-radius:99px;padding:.25rem .58rem;font-size:.73rem;font-weight:800;background:var(--lav);color:var(--purple-dark);white-space:nowrap}
+.badge.online,.badge.approved{background:var(--mint);color:#28744d}.badge.offline,.badge.denied{background:#f2edf2;color:#766b79}.badge.pending{background:var(--yellow);color:#916314}
+.action-row{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap;margin-top:.7rem}.action-row button{font-size:.8rem;padding:.52rem .7rem}
+.empty-state{padding:1rem;text-align:center;border:1px dashed #dfd1e7;border-radius:15px;background:#fff9;color:var(--muted);font-size:.87rem}
+.report-toolbar{display:flex;align-items:center;justify-content:space-between;gap:.7rem;flex-wrap:wrap}.report-toolbar select{min-width:125px}
+.metric-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.55rem;margin:.7rem 0}
+.metric{padding:.65rem;border-radius:14px;background:#faf6ff;border:1px solid #f0e8f8}.metric:nth-child(2){background:#f1faf5;border-color:#e3f1e8}.metric:nth-child(3){background:#fff7f1;border-color:#f4eadd}
+.metric-label{display:block;color:var(--muted);font-size:.75rem}.metric-value{font-size:1.23rem;font-weight:900;letter-spacing:-.03em}
+.report-section{padding-top:.65rem;margin-top:.55rem;border-top:1px solid var(--line)}.report-section h3{font-size:.88rem;margin:.25rem 0 .65rem}
+.report-bars{display:grid;gap:.38rem}.report-bar-row{display:grid;grid-template-columns:minmax(82px,130px) 1fr auto;align-items:center;gap:.5rem;font-size:.78rem}
+.report-bar-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#665c6b}.report-track{height:10px;border-radius:99px;background:#f1edf3;overflow:hidden}
+.report-fill{height:100%;min-width:2px;border-radius:99px;background:linear-gradient(90deg,#a78bd8,#e3a2b3);transform-origin:left;animation:bar-grow .55s cubic-bezier(.2,.75,.3,1) both}
+.report-value{color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.audit-item details{margin-top:.45rem}.audit-item summary{font-size:.78rem;color:var(--purple-dark);font-weight:750;cursor:pointer}.audit-changes{font-size:.77rem;color:var(--muted);padding:.5rem .65rem;margin-top:.3rem;border-radius:10px;background:#faf7fb;overflow-wrap:anywhere}
+.audit-summary{display:flex;align-items:flex-start;gap:.65rem}.audit-icon{width:34px;height:34px;display:grid;place-items:center;flex:none;border-radius:12px;background:var(--lav);font-size:1rem}.audit-copy{min-width:0;flex:1}.audit-copy .item-title{line-height:1.4}.audit-copy .item-meta{margin-top:.12rem}.audit-changes{display:grid;gap:.35rem}.audit-change{padding:.45rem .55rem;border-radius:9px;background:#fff;overflow-wrap:anywhere}.audit-change b{color:var(--ink)}
+.danger-zone{border-color:#f2dce0;background:#fffafb}.danger-zone .view-icon{background:#fff0f2}
+@keyframes bar-grow{from{transform:scaleX(.04);opacity:.5}to{transform:scaleX(1);opacity:1}}
+@media(max-width:850px){.policy-card.quota,.policy-card.schedule-card,.policy-card.web-card,.policy-card.rules-card{grid-column:span 12}}
+@media(max-width:760px){.ui-span-8,.ui-span-7,.ui-span-6,.ui-span-5,.ui-span-4{grid-column:span 12}.metric-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:640px){.audit-list{max-height:58vh}}
+@media(max-width:560px){.policy-layout{gap:.6rem}.policy-card{padding:.8rem}.rule-editors{grid-template-columns:1fr}.schedule-row{min-width:540px}.category-option{font-size:.77rem;padding:.55rem}.metric-grid{gap:.35rem}.metric{padding:.55rem}.metric-value{font-size:1.05rem}.report-bar-row{grid-template-columns:76px 1fr auto}}
+@media(prefers-reduced-motion:reduce){.report-fill{animation:none}}
+a{color:var(--purple-dark);font-weight:700;text-underline-offset:3px}a:hover{color:var(--red)}
+@keyframes page-in{from{opacity:.55;filter:blur(3px)}to{opacity:1;filter:blur(0)}}
+@keyframes rise-in{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+@media(max-width:640px){.topbar{height:64px}.topnote{display:none}.wrap{width:min(calc(100% - 1rem),1160px);margin:1rem auto 3rem}.main-head{align-items:flex-start}nav{width:100%;overflow:auto;flex-wrap:nowrap}nav button{white-space:nowrap}.card{padding:.95rem}table{display:block;overflow:auto}}
 </style></head><body>
-<h1>OpenGuard Kids</h1>
-<div class="mut"><em>Công cụ đồng hành, không phải phần mềm theo dõi lén. Trẻ thấy cùng báo cáo và nhật ký luật mà phụ huynh thấy.</em></div>
-<div id="msg"></div>
+<header class="topbar"><div class="brand"><span class="brandmark">🌈</span><span>OpenGuard <span style="color:var(--purple)">Kids</span></span></div><div class="topnote">Một chút an tâm, thật nhiều yêu thương ✨</div></header>
+<div class="wrap">
+<div id="msg" role="status" aria-live="polite"></div>
 
 <section id="auth">
-  <input id="email" type="email" placeholder="Email" autocomplete="username"><br>
-  <input id="pw" type="password" placeholder="Mật khẩu (≥10 ký tự)" autocomplete="current-password"><br>
-  <button class="p" onclick="login()">Đăng nhập</button> <button onclick="reg()">Đăng ký</button>
+  <div class="card auth-card"><div class="brandmark">🐻</div><h1>Chào ba mẹ! <span aria-hidden="true">🌷</span></h1>
+  <p class="mut">Cùng tạo một không gian số an toàn, nhẹ nhàng và minh bạch cho cả gia đình nhé.</p>
+  <input id="email" type="email" placeholder="Email" autocomplete="username" aria-label="Email">
+  <input id="pw" type="password" placeholder="Mật khẩu (ít nhất 10 ký tự)" autocomplete="current-password" aria-label="Mật khẩu">
+  <div class="head-actions"><button class="p" onclick="login()">Đăng nhập</button><button onclick="reg()">Tạo tài khoản</button></div>
+  <p class="mut">💛 Con cũng có thể xem báo cáo và nhật ký quy tắc trên máy của mình.</p></div>
 </section>
 
 <section id="main" hidden>
-  <div style="display:flex;justify-content:space-between;gap:.5rem;flex-wrap:wrap">
-    <select id="child" onchange="sel()"></select>
-    <span><button onclick="addChild()">+ Thêm con</button> <button onclick="logout()">Đăng xuất</button></span>
-  </div>
+  <div class="main-head"><div><h1>Góc nhỏ của gia đình 🌼</h1><p class="mut">Quản lý thiết bị, thời gian và quy tắc sử dụng — cùng nhau trò chuyện để mọi thứ luôn rõ ràng.</p></div>
+  <div class="head-actions"><select id="child" onchange="sel()" aria-label="Chọn hồ sơ trẻ"></select><button class="p" onclick="addChild()">＋ Thêm hồ sơ</button><button onclick="logout()">Đăng xuất</button></div></div>
   <nav id="tabs"></nav>
+  <div id="tab-status" role="status" aria-live="polite"></div>
   <div id="view"></div>
 </section>
+</div>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -43,87 +134,217 @@ function h(tag,attrs={},...kids){const e=document.createElement(tag);
   for(const[k,v]of Object.entries(attrs)){if(k.startsWith('on'))e[k]=v;else if(k==='class')e.className=v;else e.setAttribute(k,v)}
   for(const c of kids.flat())e.append(c instanceof Node?c:document.createTextNode(c??''));return e}
 function say(t,ok){$('msg').className=ok?'ok':'';$('msg').textContent=t||''}
-async function api(path,method='GET',body){
+async function api(path,method='GET',body,quiet=false){
   const opt={method,credentials:'same-origin',headers:{}};
   if(method!=='GET'){opt.headers['X-CSRF-Token']=csrf()}
   if(body!==undefined){opt.headers['Content-Type']='application/json';opt.body=JSON.stringify(body)}
   const r=await fetch(path,opt);const j=await r.json().catch(()=>({}));
-  if(!r.ok){const d=j.detail;say(typeof d==='string'?d:'Lỗi '+r.status);throw new Error(d)}
-  say('');return j}
+  if(!r.ok){const d=j.detail;if(!quiet)say(typeof d==='string'?d:'Lỗi '+r.status);throw new Error(d)}
+  if(!quiet)say('');return j}
 const creds=()=>({email:$('email').value,password:$('pw').value});
 async function reg(){await api('/auth/register','POST',creds());say('Đã đăng ký, hãy đăng nhập',true)}
 async function login(){await api('/auth/login','POST',creds());boot()}
-async function logout(){await api('/auth/logout','POST');$('main').hidden=true;$('auth').hidden=false}
-let children=[],cur=null,tab='over',pol=null;
+async function logout(){await api('/auth/logout','POST');if(requestPollTimer){clearInterval(requestPollTimer);requestPollTimer=null}pendingRequestCount=0;$('main').hidden=true;$('auth').hidden=false}
+let children=[],cur=null,tab='over',pol=null,pendingRequestCount=0,requestPollTimer=null,requestBadgeRefreshing=false;
 async function boot(){children=await api('/children');$('auth').hidden=true;$('main').hidden=false;
   $('child').replaceChildren(...children.map(c=>h('option',{value:c.id},`${c.name} (${c.age} tuổi)`)));
-  cur=children.length?children[0].id:null;$('child').value=cur;drawTabs();show()}
+  cur=children.length?children[0].id:null;$('child').value=cur;drawTabs();show();refreshRequestBadge();
+  if(!requestPollTimer)requestPollTimer=setInterval(refreshRequestBadge,5000)}
 function sel(){cur=+$('child').value;show()}
 async function addChild(){const n=prompt('Tên con?');if(!n)return;const a=+prompt('Tuổi? (3–17)','9');
   await api('/children','POST',{name:n,age:a});boot()}
 const TABS=[['over','Thiết bị & lệnh'],['pol','Chính sách'],['req','Yêu cầu của con'],['rep','Báo cáo'],['aud','Nhật ký']];
-function drawTabs(){$('tabs').replaceChildren(...TABS.map(([k,t])=>h('button',{class:k===tab?'on':'',onclick:()=>{tab=k;drawTabs();show()}},t)))}
+function drawTabs(){$('tabs').replaceChildren(...TABS.map(([k,t])=>{
+  const button=h('button',{class:k===tab?'on':'',onclick:()=>{tab=k;drawTabs();show()}},t);
+  if(k==='req'&&pendingRequestCount){button.setAttribute('aria-label',`${t}: ${pendingRequestCount} yêu cầu đang chờ`);
+    button.append(h('span',{class:'tab-badge','aria-hidden':'true'},pendingRequestCount>99?'99+':pendingRequestCount))}
+  return button}))}
+async function refreshRequestBadge(){if(requestBadgeRefreshing)return;requestBadgeRefreshing=true;try{
+  const requests=await api('/requests?status=all','GET',undefined,true);
+  const count=requests.filter(r=>r.status==='pending').length;
+  if(count!==pendingRequestCount){pendingRequestCount=count;drawTabs()}
+  $('tab-status').textContent='';
+ }catch(error){$('tab-status').textContent='Không cập nhật được thông báo yêu cầu đang chờ. Hãy kiểm tra kết nối hoặc tải lại trang.'}finally{requestBadgeRefreshing=false}}
 async function show(){const v=$('view');v.replaceChildren();if(!cur){v.append(h('p',{},'Hãy thêm con để bắt đầu.'));return}
   ({over,pol:polTab,req,rep,aud})[tab](v)}
 
 async function over(v){
-  const[ds]=[await api('/devices')];
-  v.append(h('div',{class:'card'},h('b',{},'Ghép đôi máy mới'),h('p',{class:'mut'},'Tạo mã (hiệu lực 10 phút). Nhập mã trên máy của con – đây là bước ghi nhận sự đồng ý của cha mẹ.'),
-    h('button',{class:'p',onclick:async e=>{const j=await api(`/children/${cur}/enroll-code`,'POST');e.target.nextSibling.textContent=' Mã: '+j.code}},'Tạo mã ghép đôi'),h('span',{})));
-  v.append(h('div',{class:'card'},h('b',{},'Lệnh khẩn (đến máy trong vài giây)'),h('br'),
-    h('button',{class:'d',onclick:()=>cmd('lock')},'Khóa ngay'),' ',h('button',{onclick:()=>cmd('unlock')},'Mở khóa'),' ',
-    h('button',{onclick:()=>cmd('add_minutes',15)},'+15 phút')));
-  v.append(h('h2',{},'Thiết bị'),...ds.filter(d=>d.child_id===cur).map(d=>h('div',{class:'card'},
-    h('b',{},d.name),h('div',{class:'mut'},`Lần cuối: ${d.last_seen||'chưa có'} · chính sách v${d.policy_version_seen} · đã dùng hôm nay ${Math.round(d.quota_used_sec/60)} phút`+(Math.abs(d.clock_skew)>120?' · ⚠ đồng hồ máy bị lệch':'')),
-    h('button',{class:'d',onclick:async()=>{if(confirm('Thu hồi thiết bị này?')){await api('/devices/'+d.id,'DELETE');show()}}},'Thu hồi'))));
-  v.append(h('div',{class:'card'},h('b',{},'Dữ liệu của con'),h('br'),
-    h('button',{class:'d',onclick:async()=>{if(confirm('Xóa TOÀN BỘ dữ liệu của con trên máy chủ và trong bộ đệm của agent?')){const j=await api(`/children/${cur}/data`,'DELETE');say('Đã xóa '+j.deleted_events+' sự kiện',true)}}},'Xóa toàn bộ dữ liệu của con tôi')))}
+  const ds=await api('/devices'),devices=ds.filter(d=>d.child_id===cur);
+  const code=h('span',{class:'pair-code','aria-live':'polite'},'Mã sẽ hiện ở đây');
+  const enroll=h('section',{class:'card ui-card ui-span-7'},
+    h('div',{class:'ui-card-head'},h('span',{class:'view-icon'},'🧩'),h('div',{},h('h3',{},'Kết nối máy mới'),h('p',{class:'mut'},'Mã dùng một lần, có hiệu lực trong 10 phút.'))),
+    h('p',{class:'mut'},'Nhập mã này trên máy của con để bắt đầu ghép đôi minh bạch.'),
+    h('div',{class:'enroll-box'},h('button',{class:'p',onclick:async()=>{const result=await api(`/children/${cur}/enroll-code`,'POST');code.textContent=result.code}},'Tạo mã ghép đôi'),code));
+  const commands=h('section',{class:'card ui-card ui-span-5'},
+    h('div',{class:'ui-card-head'},h('span',{class:'view-icon'},'🪄'),h('div',{},h('h3',{},'Điều khiển nhanh'),h('p',{class:'mut'},'Các lệnh gửi tới thiết bị đã ghép đôi.'))),
+    h('div',{class:'action-row'},h('button',{class:'d',onclick:()=>cmd('lock')},'🔒 Khóa máy'),h('button',{onclick:()=>cmd('unlock')},'🔓 Mở khóa'),h('button',{onclick:()=>cmd('add_minutes',15)},'⏰ Tặng 15 phút')));
+  const deviceCards=devices.map(d=>{
+    const seen=d.last_seen?new Date(d.last_seen):null,online=Boolean(seen&&!Number.isNaN(seen.getTime())&&Date.now()-seen.getTime()<180000);
+    const last=seen&&!Number.isNaN(seen.getTime())?seen.toLocaleString('vi-VN'):'Chưa có kết nối';
+    return h('article',{class:'device-item'},
+      h('div',{class:'item-top'},h('div',{class:'item-title'},'💻 ',d.name),h('span',{class:'badge '+(online?'online':'offline')},online?'● Đang trực tuyến':'○ Ngoại tuyến')),
+      h('div',{class:'item-meta'},`Lần cuối kết nối: ${last} · Chính sách v${d.policy_version_seen} · Đã dùng hôm nay ${Math.round(d.quota_used_sec/60)} phút`),
+      Math.abs(d.clock_skew)>120?h('div',{class:'item-meta'},'⚠️ Đồng hồ thiết bị có vẻ đang bị lệch.'):'',
+      h('div',{class:'action-row'},h('button',{class:'d',onclick:async()=>{if(confirm('Thu hồi thiết bị này?')){await api('/devices/'+d.id,'DELETE');show()}}},'Thu hồi thiết bị')))
+  });
+  const deviceSection=h('section',{class:'card ui-card ui-span-12'},
+    h('div',{class:'ui-card-head'},h('span',{class:'view-icon'},'💻'),h('div',{},h('h3',{},`Thiết bị đã ghép đôi · ${devices.length}`),h('p',{class:'mut'},'Trạng thái dựa trên lần gửi tín hiệu gần nhất.'))),
+    devices.length?h('div',{class:'device-list'},...deviceCards):h('div',{class:'empty-state'},'Chưa có thiết bị nào. Tạo mã ghép đôi để bắt đầu nhé 🌱'));
+  const deleteSection=h('section',{class:'card ui-card danger-zone ui-span-12'},
+    h('div',{class:'ui-card-head'},h('span',{class:'view-icon'},'🧺'),h('div',{},h('h3',{},'Dữ liệu gia đình'),h('p',{class:'mut'},'Xóa dữ liệu đã ghi nhận của hồ sơ này trên server và yêu cầu agent xóa bộ đệm.'))),
+    h('button',{class:'d',onclick:async()=>{if(confirm('Xóa TOÀN BỘ dữ liệu của con trên máy chủ và trong bộ đệm của agent?')){const result=await api(`/children/${cur}/data`,'DELETE');say('Đã xóa '+result.deleted_events+' sự kiện',true)}}},'Xóa toàn bộ dữ liệu của con'));
+  v.append(h('div',{class:'ui-grid'},enroll,commands,deviceSection,deleteSection))}
 async function cmd(kind,minutes){const j=await api(`/children/${cur}/commands`,'POST',{kind,minutes:minutes||15});say(`Đã gửi tới ${j.sent} thiết bị`,true)}
 
 async function polTab(v){
   const r=await api(`/children/${cur}/policy`);pol=r.policy;
-  const num=(k,l)=>h('label',{},l+' ',h('input',{type:'number',min:0,max:1440,value:pol[k],style:'width:5rem',onchange:e=>pol[k]=+e.target.value}));
-  v.append(h('div',{class:'card'},h('b',{},`Chính sách v${r.version}`),h('br'),num('quota_min_weekday','Hạn mức ngày thường (phút)'),h('br'),num('quota_min_weekend','Hạn mức cuối tuần (phút)')));
-  const g=h('div',{class:'grid'}),days=['T2','T3','T4','T5','T6','T7','CN'];
+  const layout=h('div',{class:'policy-layout'});
+  const title=(icon,text,sub)=>h('div',{},h('div',{class:'policy-title'},h('span',{class:'policy-icon'},icon),h('div',{},h('div',{},text),sub?h('div',{class:'policy-kicker'},sub):'')));
+  const quotaBox=(key,label,kind)=>h('div',{class:'quota-box'+(kind?' '+kind:'')},
+    h('label',{for:'quota-'+key},label),h('div',{class:'quota-input'},h('input',{id:'quota-'+key,type:'number',min:0,max:1440,value:pol[key],'aria-label':label,onchange:e=>pol[key]=+e.target.value}),h('span',{},'phút')));
+  const quota=h('section',{class:'card policy-card quota'},title('⏳',`Hạn mức · v${r.version}`,'Một ngày được dùng'),h('div',{class:'quota-pair'},
+    quotaBox('quota_min_weekday','Ngày thường'),quotaBox('quota_min_weekend','Cuối tuần','weekend')),
+    h('p',{class:'policy-hint'},'Ba mẹ có thể điều chỉnh thời lượng phù hợp với lịch sinh hoạt.'));
+  layout.append(quota);
+
+  const days=['T2','T3','T4','T5','T6','T7','CN'];
   pol.schedule=pol.schedule.map(s=>s.split(''));
-  days.forEach((d,i)=>{const row=h('div',{class:'row'},h('b',{},d));
-    for(let s=0;s<48;s++){const c=h('div',{class:'c'+(pol.schedule[i][s]==='1'?' on':'')+(s%2===0&&s>0?' h':''),title:`${String(s>>1).padStart(2,'0')}:${s%2?'30':'00'}`,
-      onclick:()=>{pol.schedule[i][s]=pol.schedule[i][s]==='1'?'0':'1';c.classList.toggle('on')}});row.append(c)}g.append(row)});
-  v.append(h('div',{class:'card'},h('b',{},'Lịch tuần (ô xanh = được dùng, mỗi ô 30 phút, 0h → 24h)'),g));
+  const g=h('div',{class:'schedule-grid','aria-label':'Lịch sử dụng trong tuần'});
+  days.forEach((d,i)=>{const row=h('div',{class:'schedule-row'},h('b',{class:'schedule-day'},d));
+    for(let s=0;s<48;s++){
+      const on=pol.schedule[i][s]==='1';
+      const time=`${String(s>>1).padStart(2,'0')}:${s%2?'30':'00'}`;
+      const c=h('button',{type:'button',class:'schedule-cell'+(on?' on':'')+(s%2===0&&s>0?' hour':''),title:`${d} ${time}`,
+        'aria-label':`${d} ${time}–${String((s+1)>>1).padStart(2,'0')}:${(s+1)%2?'30':'00'} ${on?'được dùng':'không dùng'}`,
+        'aria-pressed':on?'true':'false',onclick:()=>{pol.schedule[i][s]=pol.schedule[i][s]==='1'?'0':'1';c.classList.toggle('on');c.setAttribute('aria-pressed',pol.schedule[i][s]==='1')}});row.append(c)
+    }g.append(row)});
+  const setDay=(day,value)=>{pol.schedule[day]=Array(48).fill(value?'1':'0');g.children[day].querySelectorAll('.schedule-cell').forEach(c=>{c.classList.toggle('on',value);c.setAttribute('aria-pressed',String(value))})};
+  const schedule=h('section',{class:'card policy-card schedule-card'},h('div',{class:'schedule-head'},
+    title('🗓️','Lịch trong tuần','Mỗi ô là 30 phút · xanh là được dùng'),
+    h('div',{class:'schedule-actions'},h('button',{type:'button',onclick:()=>days.forEach((_,i)=>setDay(i,true))},'Chọn cả tuần'),h('button',{type:'button',onclick:()=>days.forEach((_,i)=>setDay(i,false))},'Bỏ chọn'))),
+    g,h('div',{class:'schedule-legend'},h('span',{class:'legend-dot'}),'Được dùng',h('span',{},'·'),'Ô trống: không dùng'));
+  layout.append(schedule);
+
   const cats=[['social','Mạng xã hội'],['games','Trò chơi'],['entertainment','Giải trí'],['inappropriate','Không phù hợp lứa tuổi']];
-  v.append(h('div',{class:'card'},h('b',{},'Chặn theo nhóm website'),h('br'),...cats.map(([k,l])=>h('label',{},h('input',{type:'checkbox',checked:pol.blocked_categories.includes(k)?'':null,
-    onchange:e=>{pol.blocked_categories=pol.blocked_categories.filter(x=>x!==k);if(e.target.checked)pol.blocked_categories.push(k)}}),' '+l+'  ')),h('br'),
-    h('label',{},h('input',{type:'checkbox',onchange:e=>pol.safesearch=e.target.checked,checked:pol.safesearch?'':null}),' Bật SafeSearch'),h('br'),
-    h('label',{},h('input',{type:'checkbox',onchange:e=>pol.block_uncategorized=e.target.checked,checked:pol.block_uncategorized?'':null}),' Chặn trang chưa phân loại')));
+  const categoryOptions=cats.map(([k,label])=>h('label',{class:'category-option'},h('input',{type:'checkbox',checked:pol.blocked_categories.includes(k)?'':null,
+    onchange:e=>{pol.blocked_categories=pol.blocked_categories.filter(x=>x!==k);if(e.target.checked)pol.blocked_categories.push(k)}}),h('span',{},label)));
+  const web=h('section',{class:'card policy-card web-card'},title('🧸','Góc an toàn web','Chọn nhóm muốn chặn'),
+    h('div',{class:'category-grid'},...categoryOptions),
+    h('div',{class:'toggle-list'},
+      h('label',{class:'toggle-row'},h('span',{},'Bật SafeSearch'),h('input',{type:'checkbox',role:'switch',checked:pol.safesearch?'':null,'aria-label':'Bật SafeSearch',onchange:e=>pol.safesearch=e.target.checked})),
+      h('label',{class:'toggle-row'},h('span',{},'Chặn trang chưa phân loại'),h('input',{type:'checkbox',role:'switch',checked:pol.block_uncategorized?'':null,'aria-label':'Chặn trang chưa phân loại',onchange:e=>pol.block_uncategorized=e.target.checked}))));
+  layout.append(web);
+
   const dr=h('textarea',{rows:4,style:'width:100%',placeholder:'mỗi dòng: block example.com  hoặc  allow example.org'},pol.domain_rules.map(x=>`${x.action} ${x.domain}`).join('\n'));
   const ar=h('textarea',{rows:4,style:'width:100%',placeholder:'mỗi dòng: block tên.exe [sha256]  hoặc  allow tên.exe [sha256]'},pol.app_rules.map(x=>`${x.action} ${x.name} ${x.sha256}`.trim()).join('\n'));
-  const mode=h('select',{onchange:e=>pol.app_mode=e.target.value},h('option',{value:'blocklist'},'Chỉ chặn ứng dụng trong danh sách'),h('option',{value:'allowlist'},'Chỉ cho phép ứng dụng trong danh sách'));mode.value=pol.app_mode;
-  v.append(h('div',{class:'card'},h('b',{},'Quy tắc tên miền (tên miền con được áp dụng theo)'),dr,h('b',{},'Quy tắc ứng dụng (băm SHA-256 giúp nhận ra tệp bị đổi tên)'),mode,ar));
-  v.append(h('button',{class:'p',onclick:async()=>{
+  const mode=h('select',{class:'rule-mode','aria-label':'Chế độ kiểm soát ứng dụng',onchange:e=>pol.app_mode=e.target.value},h('option',{value:'blocklist'},'Chỉ chặn ứng dụng trong danh sách'),h('option',{value:'allowlist'},'Chỉ cho phép ứng dụng trong danh sách'));mode.value=pol.app_mode;
+  const rules=h('section',{class:'card policy-card rules-card'},title('🪄','Quy tắc riêng của gia đình','Tên miền & ứng dụng'),
+    h('div',{class:'rule-editors'},
+      h('div',{class:'rule-group'},h('label',{class:'rule-label',for:'domain-rules'},'🌐 Tên miền',h('span',{class:'mut'},'(áp dụng cả miền con)')),
+        h('textarea',{id:'domain-rules',rows:4,placeholder:'block example.com\nallow example.org'},dr.value)),
+      h('div',{class:'rule-group'},h('label',{class:'rule-label',for:'app-rules'},'🎮 Ứng dụng'),
+        mode,h('textarea',{id:'app-rules',rows:4,placeholder:'block game.exe\nallow study.exe [sha256]'},ar.value))));
+  layout.append(rules);
+  const save=h('button',{class:'p',onclick:async()=>{
     const p=JSON.parse(JSON.stringify(pol));p.schedule=pol.schedule.map(s=>s.join(''));
     const line=t=>t.value.split('\n').map(x=>x.trim()).filter(Boolean).map(x=>x.split(/\s+/));
     p.domain_rules=line(dr).map(([a,d])=>({action:a,domain:d}));
     p.app_rules=line(ar).map(([a,n,s])=>({action:a,name:n,sha256:s||''}));
-    const j=await api(`/children/${cur}/policy`,'PUT',p);say('Đã lưu – chính sách v'+j.version+' (áp dụng trên máy con trong vài giây)',true)}},'Lưu chính sách'))}
+    const j=await api(`/children/${cur}/policy`,'PUT',p);say('Đã lưu – chính sách v'+j.version+' (áp dụng trên máy con trong vài giây)',true)}},'💜 Lưu thay đổi');
+  layout.append(h('div',{class:'policy-save'},h('span',{class:'mut'},'Nhớ lưu để gửi thay đổi tới máy của con nhé.'),save));
+  v.append(layout)}
 
 async function req(v){const rs=await api('/requests?status=all');
-  v.append(h('h2',{},'Yêu cầu của con'),...(rs.length?rs:[{empty:1}]).map(r=>r.empty?h('p',{class:'mut'},'Chưa có yêu cầu.'):h('div',{class:'card'},
-    h('b',{},`${r.child}: ${r.kind==='more_time'?`xin thêm ${r.minutes} phút`:'báo chặn nhầm '+r.subject}`),h('div',{class:'mut'},`${r.created_at} · ${r.status}${r.note?' · "'+r.note+'"':''}${r.reply?' · trả lời: '+r.reply:''}`),
-    r.status==='pending'?h('span',{},h('button',{class:'p',onclick:()=>decide(r,true)},'Đồng ý'),' ',h('button',{onclick:()=>decide(r,false)},'Từ chối')):'')))}
+  const pending=rs.filter(r=>r.status==='pending').length;
+  const statusLabel={pending:'Đang chờ ba mẹ',approved:'Đã đồng ý 💚',denied:'Chưa đồng ý'};
+  const cards=rs.map(r=>{
+    const moreTime=r.kind==='more_time',title=moreTime?`Xin thêm ${r.minutes} phút`:`Báo trang bị chặn nhầm: ${r.subject}`;
+    const created=new Date(r.created_at),when=Number.isNaN(created.getTime())?r.created_at:created.toLocaleString('vi-VN');
+    return h('article',{class:'request-item'},
+      h('div',{class:'item-top'},h('div',{class:'item-title'},moreTime?'⏰ ':'🌐 ',r.child,' · ',title),h('span',{class:'badge '+(r.status==='pending'?'pending':r.status==='approved'?'approved':'denied')},statusLabel[r.status]||r.status)),
+      h('div',{class:'item-meta'},when,r.note?` · Lời nhắn: “${r.note}”`:''),r.reply?h('div',{class:'item-meta'},'💌 Ba mẹ trả lời: “',r.reply,'”'):'',
+      r.status==='pending'?h('div',{class:'action-row'},h('button',{class:'p',onclick:()=>decide(r,true)},'💚 Đồng ý'),h('button',{onclick:()=>decide(r,false)},'Từ chối')):'')
+  });
+  v.append(h('div',{class:'view-heading'},h('div',{},h('h2',{},'Hộp thư yêu thương 💌'),h('p',{class:'mut'},'Xem lời nhắn và phản hồi yêu cầu của con.')),h('span',{class:'badge '+(pending?'pending':'approved')},pending?`${pending} yêu cầu đang chờ`:'Đã xem hết')));
+  v.append(rs.length?h('div',{class:'ui-grid'},h('section',{class:'card ui-card ui-span-12'},h('div',{class:'request-list'},...cards))):h('div',{class:'empty-state'},'Hộp thư đang yên bình — chưa có yêu cầu nào 🌷'))}
 async function decide(r,ok){const reply=prompt('Lời nhắn cho con (không bắt buộc)')||'';await api(`/requests/${r.id}/decide`,'POST',{approve:ok,minutes:r.minutes||15,reply});show()}
 
 async function rep(v){
   const sel=h('select',{onchange:()=>show()},h('option',{value:7},'7 ngày'),h('option',{value:30},'30 ngày'));sel.value=window._d||7;sel.onchange=()=>{window._d=sel.value;show()};
   const d=+sel.value,r=await api(`/reports/${cur}?days=${d}`);
-  const bars=(rows,key,unit)=>{const mx=Math.max(1,...rows.map(x=>x[key]));return rows.map(x=>h('div',{class:'br'},h('span',{class:'l'},x.date||x.name),h('div',{class:'bar',style:`width:${Math.round(x[key]/mx*60)}%`}),h('span',{},x[key]+unit)))};
-  v.append(h('div',{},sel,' ',h('a',{href:`/reports/${cur}/export.csv?days=${d}`},'Xuất CSV')),
-    h('h2',{},'Thời lượng theo ngày'),...bars(r.daily,'minutes',' p'),h('h2',{},'Top 10 ứng dụng'),...bars(r.top_apps,'minutes',' p'),
-    h('h2',{},'Top 10 tên miền'),...bars(r.top_domains,'count',' lần'),h('h2',{},'Số lần bị chặn: '+r.blocked))}
+  const totalMinutes=r.daily.reduce((sum,x)=>sum+x.minutes,0),appsTracked=r.top_apps.length;
+  const bars=(rows,key,unit)=>rows.length?h('div',{class:'report-bars'},...rows.map(x=>{
+    const max=Math.max(1,...rows.map(item=>item[key])),percent=Math.min(100,Math.max(2,Math.round(x[key]/max*100)));
+    return h('div',{class:'report-bar-row'},h('span',{class:'report-bar-label',title:x.date||x.name},x.date||x.name),h('div',{class:'report-track'},h('div',{class:'report-fill',style:`width:${percent}%`})),h('span',{class:'report-value'},x[key]+unit))
+  })):h('div',{class:'empty-state'},'Chưa có dữ liệu trong khoảng thời gian này.');
+  const panel=(icon,title,content,span)=>h('section',{class:`card ui-card ui-span-${span}`},h('div',{class:'ui-card-head'},h('span',{class:'view-icon'},icon),h('div',{},h('h3',{},title))),content);
+  v.append(h('div',{class:'report-toolbar'},h('div',{},h('h2',{},'Bức tranh sử dụng 🌈'),h('p',{class:'mut'},`Tổng hợp trong ${d} ngày gần nhất.`)),h('div',{class:'head-actions'},sel,h('a',{href:`/reports/${cur}/export.csv?days=${d}`},'⬇ Xuất CSV'))),
+    h('div',{class:'metric-grid'},h('div',{class:'metric'},h('span',{class:'metric-label'},'Tổng thời lượng'),h('strong',{class:'metric-value'},`${Math.round(totalMinutes)} phút`)),h('div',{class:'metric'},h('span',{class:'metric-label'},'Ứng dụng có dữ liệu'),h('strong',{class:'metric-value'},appsTracked)),h('div',{class:'metric'},h('span',{class:'metric-label'},'Lượt bị chặn'),h('strong',{class:'metric-value'},r.blocked))),
+    h('div',{class:'ui-grid'},panel('📆','Thời lượng theo ngày',bars(r.daily,'minutes',' phút'),12),panel('🎮','Ứng dụng dùng nhiều',bars(r.top_apps,'minutes',' phút'),6),panel('🌐','Trang web được truy cập',bars(r.top_domains,'count',' lượt'),6)))}
 
+const AUDIT_ACTIONS={
+ policy_update:['🛡️','Cập nhật quy tắc sử dụng'],
+ policy_update_from_request:['🌐','Cập nhật quy tắc theo lời nhắn của con'],
+ request_decided:['💌','Phản hồi lời nhắn của con'],
+ command_lock:['🔒','Tạm khóa thiết bị'],
+ command_unlock:['🔓','Mở khóa thiết bị'],
+ command_add_minutes:['⏰','Cộng thêm thời gian sử dụng'],
+ command_wipe_cache:['🧹','Xóa dữ liệu đã lưu trên thiết bị'],
+ device_enrolled:['💻','Thêm thiết bị của con'],
+ device_revoked:['🚫','Gỡ thiết bị khỏi tài khoản'],
+ device_uninstalled:['🗑️','Gỡ OpenGuard Kids khỏi thiết bị'],
+ data_deleted:['🧽','Xóa dữ liệu sử dụng']
+};
+const AUDIT_FIELDS={quota_min_weekday:'Thời lượng ngày trong tuần',quota_min_weekend:'Thời lượng cuối tuần',schedule:'Khung giờ được phép',blocked_categories:'Nhóm nội dung bị chặn',domain_rules:'Quy tắc trang web',app_rules:'Quy tắc ứng dụng',app_mode:'Cách áp dụng quy tắc ứng dụng',block_uncategorized:'Trang chưa phân loại',safesearch:'Tìm kiếm an toàn',tz_offset_min:'Múi giờ',set_by:'Người cập nhật',minutes:'Thời gian được cộng',events:'Số mục dữ liệu',device:'Thiết bị',consent:'Sự đồng ý'};
+const AUDIT_CATEGORIES={education:'Học tập',entertainment:'Giải trí',social:'Mạng xã hội',games:'Trò chơi',inappropriate:'Nội dung không phù hợp'};
+function auditTime(value){const raw=String(value||''),date=new Date(/[zZ]|[+-]\d\d:\d\d$/.test(raw)?raw:raw+'Z');return Number.isNaN(date.getTime())?raw:date.toLocaleString('vi-VN')}
+function auditDuration(value){const minutes=Number(value);if(!Number.isFinite(minutes))return '—';if(minutes<60)return `${minutes} phút`;const hours=Math.floor(minutes/60),rest=minutes%60;return rest?`${hours} giờ ${rest} phút`:`${hours} giờ`}
+function auditValue(key,value){
+ if(value===null||value===undefined)return 'Chưa thiết lập';
+ if(key.startsWith('quota_min_')||key==='minutes')return auditDuration(value);
+ if(key==='blocked_categories')return value.length?value.map(x=>AUDIT_CATEGORIES[x]||x).join(', '):'Không chặn nhóm nào';
+ if(key==='app_mode')return value==='allowlist'?'Chỉ cho phép ứng dụng trong danh sách':'Chặn ứng dụng trong danh sách';
+ if(key==='block_uncategorized')return value?'Chặn':'Cho phép';
+ if(key==='safesearch')return value?'Bật':'Tắt';
+ if(key==='consent')return value?'Đã ghi nhận':'Chưa ghi nhận';
+ if(typeof value==='boolean')return value?'Bật':'Tắt';
+ if(key==='tz_offset_min')return `UTC${Number(value)>=0?'+':''}${(Number(value)/60).toString()}`;
+ if(key==='domain_rules'||key==='app_rules')return `${Array.isArray(value)?value.length:0} quy tắc`;
+ if(key==='schedule')return 'Đã thiết lập khung giờ';
+ if(key==='events')return `${value} mục`;
+ if(Array.isArray(value))return value.length?value.join(', '):'Trống';
+ if(typeof value==='object')return 'Có cập nhật';
+ return String(value);
+}
+function auditChangeLines(oldValue,newValue){
+ const keys=[...new Set([...Object.keys(oldValue),...Object.keys(newValue)])].filter(key=>key!=='set_by'&&JSON.stringify(oldValue[key])!==JSON.stringify(newValue[key]));
+ return keys.map(key=>{
+   const label=AUDIT_FIELDS[key]||key.replaceAll('_',' ');
+   if(key==='schedule')return 'Khung giờ được phép: đã điều chỉnh';
+   if(key==='domain_rules'||key==='app_rules')return `${label}: ${auditValue(key,oldValue[key])} → ${auditValue(key,newValue[key])}`;
+   return `${label}: ${auditValue(key,oldValue[key])} → ${auditValue(key,newValue[key])}`;
+ });
+}
 async function aud(v){const rs=await api('/audit?child_id='+cur);
-  v.append(h('h2',{},'Nhật ký thay đổi (con cũng xem được)'),h('table',{},h('tr',{},h('th',{},'Lúc'),h('th',{},'Ai'),h('th',{},'IP'),h('th',{},'Việc'),h('th',{},'Thay đổi')),
-    ...rs.map(a=>{const ch=a.new&&a.old&&typeof a.new==='object'?Object.keys(a.new).filter(k=>JSON.stringify(a.old[k])!==JSON.stringify(a.new[k])).map(k=>`${k}: ${JSON.stringify(a.old[k])} → ${JSON.stringify(a.new[k])}`).join('; '):'';
-      return h('tr',{},h('td',{},a.ts),h('td',{},a.who||'—'),h('td',{},a.ip),h('td',{},a.action),h('td',{},ch))})))}
+  const cards=rs.map(a=>{
+    const oldValue=a.old&&typeof a.old==='object'?a.old:{},newValue=a.new&&typeof a.new==='object'?a.new:{};
+    const changes=a.action==='request_decided'&&newValue.status?[
+      `Yêu cầu: ${oldValue.kind==='more_time'?'xin thêm thời gian':oldValue.kind==='wrong_block'?'báo trang bị chặn nhầm':'lời nhắn của con'}`,
+      `Kết quả: ${newValue.status==='approved'?'Đã đồng ý':'Chưa đồng ý'}`,
+      newValue.reply?`Lời nhắn gửi con: “${newValue.reply}”`:''
+    ].filter(Boolean):a.action==='device_revoked'? [`Thiết bị: ${oldValue.device||'đã chọn'}`, 'Đã thu hồi quyền truy cập']
+      :a.action==='device_uninstalled'? [`Thiết bị: ${oldValue.device||'thiết bị này'}`, 'Đã gỡ ứng dụng khỏi thiết bị']
+      :a.action==='data_deleted'? [`Đã xóa ${oldValue.events||0} mục dữ liệu sử dụng`]
+      :auditChangeLines(oldValue,newValue);
+    const details=changes.length?h('details',{},h('summary',{},'Xem chi tiết'),h('div',{class:'audit-changes'},...changes.map(line=>h('div',{class:'audit-change'},line)))):'';
+    const [icon,title]=AUDIT_ACTIONS[a.action]||['🪄','Có thay đổi trong tài khoản'];
+    return h('article',{class:'audit-item'},
+      h('div',{class:'audit-summary'},h('span',{class:'audit-icon','aria-hidden':'true'},icon),h('div',{class:'audit-copy'},
+        h('div',{class:'item-top'},h('div',{class:'item-title'},title),h('span',{class:'badge'},a.who||'Hệ thống')),
+        h('div',{class:'item-meta'},auditTime(a.ts)),details)))
+  });
+  v.append(h('div',{class:'view-heading'},h('div',{},h('h2',{},'Nhật ký thay đổi 🌱'),h('p',{class:'mut'},'Ai đã thay đổi điều gì, vào lúc nào — cùng phần giải thích dễ hiểu.')),h('span',{class:'badge'},`${rs.length} mục gần đây`)));
+  v.append(rs.length?h('div',{class:'card ui-card'},h('div',{class:'audit-list'},...cards)):h('div',{class:'empty-state'},'Chưa có thay đổi nào được ghi lại. Mọi thứ vẫn bình yên ✨'))}
 
 api('/children').then(boot).catch(()=>say(''));
 </script></body></html>

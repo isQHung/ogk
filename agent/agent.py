@@ -1,4 +1,4 @@
-"""OGK-Agent CLI: enroll | run | uninstall | tray"""
+"""OGK-Agent CLI: enroll | run | uninstall | tray | ui"""
 import argparse
 import getpass
 import hashlib
@@ -36,6 +36,7 @@ def main():
     d.add_argument("domain")
     d.add_argument("--port", type=int, default=53)
     sub.add_parser("tray")
+    sub.add_parser("ui", help="mở giao diện local trong cửa sổ desktop")
     a = ap.parse_args()
 
     if a.cmd == "enroll":
@@ -85,6 +86,9 @@ def main():
     elif a.cmd == "tray":
         from ogk.tray import main as tray_main
         tray_main()
+    elif a.cmd == "ui":
+        from ogk.desktop import main as desktop_main
+        desktop_main()
 
 
 if __name__ == "__main__":
