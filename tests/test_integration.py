@@ -1,10 +1,12 @@
 """Kịch bản tích hợp: server thật (uvicorn) + agent thật (ServerClient/Runner)."""
+import json
 import threading
 import time
 
 import httpx
 import pytest
 import uvicorn
+from websockets.sync.client import connect
 
 import main
 from ogk.cache import Cache
@@ -127,6 +129,25 @@ def test_i4_urgent_command_under_5s_over_websocket(live, tmp_path, free_ports):
         wait_for(lambda: r.cache.extra(r.enforcer._local(r.policy).date().isoformat()) == 900, 5)
         # lệnh đã ack -> không còn chờ ở server
         wait_for(lambda: not r.client.request("POST", "/heartbeat", json={"acked": []})["commands"], 5)
+    finally:
+        r.stop()
+
+
+def test_help_decision_reaches_child_ui_over_websocket(live, tmp_path, free_ports):
+    p = Parent(live, "help-ws@x.vn")
+    _, cache = enroll(live, p, tmp_path)
+    r = new_runner(tmp_path, free_ports)
+    device_id = cache.get("conn")["device_id"]
+    try:
+        wait_for(lambda: device_id in main.hub.conns, 5)
+        url = f"ws://127.0.0.1:{r.api.port}/api/events?token={r.token}"
+        with connect(url, origin=f"http://127.0.0.1:{r.api.port}") as child_ui:
+            request = r.client.post_help("more_time", minutes=15, note="bài tập")
+            response = p.c.post(f"/requests/{request['id']}/decide",
+                                json={"approve": True, "minutes": 15, "reply": "Được con"})
+            assert response.status_code == 200
+            event = json.loads(child_ui.recv(timeout=3))
+            assert event == {"type": "help_decided", "id": request["id"], "status": "approved"}
     finally:
         r.stop()
 

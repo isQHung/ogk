@@ -157,6 +157,7 @@ def test_policy_signed_versioned_and_audited(client):
     # trẻ xem được nhật ký (NT5), không có IP
     ta = client.get("/transparency/audit", headers=auth(d)).json()
     assert "ip" not in ta[0] and "quota_min_weekday" in [k for x in ta for k in x["changed"]]
+    assert ta[0]["details"] == {}
 
 
 def test_invalid_policy_rejected(client):
@@ -235,11 +236,42 @@ def test_child_request_flow_more_time(client):
     p.post(f"/requests/{r['id']}/decide", json={"approve": True, "minutes": 20, "reply": "OK con"})
     mine = client.get("/help", headers=auth(d)).json()[0]
     assert mine["status"] == "approved" and mine["reply"] == "OK con"
+    child_audit = client.get("/transparency/audit", headers=auth(d)).json()
+    decision = next(entry for entry in child_audit if entry["action"] == "request_decided")
+    assert decision["details"] == {"status": "approved", "reply": "OK con", "kind": "more_time"}
     hb = client.post("/heartbeat", headers=auth(d), json={}).json()
     assert hb["commands"][0]["kind"] == "add_minutes" and hb["commands"][0]["minutes"] == 20
     # ack -> không gửi lại
     hb2 = client.post("/heartbeat", headers=auth(d), json={"acked": [hb["commands"][0]["id"]]}).json()
     assert hb2["commands"] == []
+
+
+@pytest.mark.parametrize("approve,status", [(True, "approved"), (False, "denied")])
+def test_deciding_child_request_pushes_status_over_websocket(client, approve, status):
+    p = parent(client, f"push-{status}@x.vn")
+    _, code = pair(p)
+    d = enroll(client, code)
+    request = client.post("/help", headers=auth(d), json={
+        "kind": "more_time", "minutes": 15, "note": "bài tập"
+    }).json()
+
+    class ConnectedDevice:
+        def __init__(self):
+            self.messages = []
+
+        async def send_json(self, payload):
+            self.messages.append(payload)
+
+    connection = ConnectedDevice()
+    main.hub.conns[d["device_id"]] = connection
+    try:
+        response = p.post(f"/requests/{request['id']}/decide", json={"approve": approve})
+        assert response.status_code == 200
+        assert connection.messages[0] == {
+            "type": "help_decided", "id": request["id"], "status": status
+        }
+    finally:
+        main.hub.conns.pop(d["device_id"], None)
 
 
 def test_wrong_block_request_adds_allow_rule(client):

@@ -1,7 +1,9 @@
 """Tray UI (chạy trong phiên người dùng): biểu tượng luôn hiển thị (NT1), giờ còn lại, xin thêm giờ (NT3)."""
 import threading
 import time
-import webbrowser
+import subprocess
+import sys
+from pathlib import Path
 
 import httpx
 
@@ -64,7 +66,11 @@ def main():
             "OpenGuard Kids", "Công cụ do phụ huynh cài để đồng hành cùng con.\nChỉ ghi: tên ứng dụng, tên miền, thời lượng.\n"
             "Không ghi: nội dung tin nhắn, phím gõ, ảnh màn hình.\nCon xem được mọi thứ ở mục “Hôm nay em đã dùng gì”.", parent=root))
 
-    menu = pystray.Menu(pystray.MenuItem("Hôm nay em đã dùng gì", lambda *_: webbrowser.open(BASE + "/")),
+    def open_ui(icon=None, item=None):
+        script = Path(__file__).resolve().parents[1] / "agent.py"
+        subprocess.Popen([sys.executable, str(script), "ui"], close_fds=True)
+
+    menu = pystray.Menu(pystray.MenuItem("Mở ứng dụng OpenGuard Kids", open_ui),
                         pystray.MenuItem("Xin thêm giờ", more_time),
                         pystray.MenuItem("Con nghĩ trang này bị chặn nhầm", wrong_block),
                         pystray.MenuItem("Về OpenGuard Kids", about))
